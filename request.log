@@ -1,0 +1,1 @@
+{"level":"info","timestamp":"2023-10-26T12:42:34.829+0700","message":"Request handled","request":{"StartTime":"2023-10-26T12:42:34.7818997+07:00","EndTime":47542200,"StatusCode":200,"ClientIP":"127.0.0.1","Method":"POST","Path":"/app/transaction/list","UserAgent":"PostmanRuntime/7.34.0"}}

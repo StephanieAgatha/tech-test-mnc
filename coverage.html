@@ -1,0 +1,991 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>repository: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">mnc-test/repository/merchant_repository.go (100.0%)</option>
+				
+				<option value="file1">mnc-test/repository/transaction_repository.go (92.3%)</option>
+				
+				<option value="file2">mnc-test/repository/transfer_repository.go (86.6%)</option>
+				
+				<option value="file3">mnc-test/repository/user-credentials-repository.go (85.0%)</option>
+				
+				<option value="file4">mnc-test/usecase/merchant_usecase.go (70.0%)</option>
+				
+				<option value="file5">mnc-test/usecase/transaction_usecase.go (64.7%)</option>
+				
+				<option value="file6">mnc-test/usecase/transfer_usecase.go (65.4%)</option>
+				
+				<option value="file7">mnc-test/usecase/user-credentials-usecase.go (52.8%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package repository
+
+import (
+        "database/sql"
+        "fmt"
+        "mnc-test/model"
+)
+
+type MerchantRepository interface {
+        CreateNewMerchant(merchant model.Merchant) error
+        FindAllMerchant() ([]model.Merchant, error)
+}
+
+type merchantRepository struct {
+        db *sql.DB
+}
+
+func (m *merchantRepository) CreateNewMerchant(merchant model.Merchant) error <span class="cov8" title="1">{
+        //TODO implement me
+        query := "insert into merchants (name) values ($1)"
+
+        _, err := m.db.Exec(query, merchant.Name)
+        if err != nil </span><span class="cov8" title="1">{
+                return fmt.Errorf("Failed to exec query %v", err.Error())
+        }</span>
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (m *merchantRepository) FindAllMerchant() ([]model.Merchant, error) <span class="cov8" title="1">{
+        //TODO implement me
+        var merchants []model.Merchant
+
+        query := "select * from merchants"
+
+        rows, err := m.db.Query(query)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, fmt.Errorf("Failed to find merchants %v", err.Error())
+        }</span>
+
+        <span class="cov8" title="1">for rows.Next() </span><span class="cov8" title="1">{
+                var merchant model.Merchant
+                if err = rows.Scan(&amp;merchant.ID, &amp;merchant.Name, &amp;merchant.CreatedAt, &amp;merchant.UpdatedAt); err != nil </span><span class="cov8" title="1">{
+                        return nil, fmt.Errorf("Failed to retrieve merchants %v", err.Error())
+                }</span>
+                <span class="cov8" title="1">merchants = append(merchants, merchant)</span>
+        }
+
+        <span class="cov8" title="1">return merchants, nil</span>
+}
+
+func NewMerchantRepository(db *sql.DB) MerchantRepository <span class="cov8" title="1">{
+        return &amp;merchantRepository{
+                db: db,
+        }
+}</span>
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package repository
+
+import (
+        "database/sql"
+        "mnc-test/model"
+)
+
+type TransactionRepository interface {
+        MakePayment(tx *model.Transaction) error
+        GetCustomerTransactionByID(custID int) ([]model.Transaction, error)
+}
+
+type transactionRepository struct {
+        db *sql.DB
+}
+
+func (t *transactionRepository) MakePayment(tx *model.Transaction) error <span class="cov8" title="1">{
+        // Start a new transaction
+        dbTx, err := t.db.Begin()
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        // Step 1: Create a new entry in the transactions table
+        <span class="cov8" title="1">_, err = dbTx.Exec(`insert into transactions (customer_id, merchant_id, bank_account_id, amount) values ($1, $2, $3, $4)`,
+                tx.CustomerID, tx.MerchantID, tx.BankAccountID, tx.Amount)
+        if err != nil </span><span class="cov8" title="1">{
+                dbTx.Rollback()
+                return err
+        }</span>
+
+        // Step 2: Deduct the amount from the bank account's balance
+        <span class="cov8" title="1">_, err = dbTx.Exec(`update BankAccounts SET balance = balance - $1 where id = $2 and customer_id = $3`,
+                tx.Amount, tx.BankAccountID, tx.CustomerID)
+        if err != nil </span><span class="cov8" title="1">{
+                dbTx.Rollback()
+                return err
+        }</span>
+
+        // Step 3: Add the amount to the merchant's balance
+        <span class="cov8" title="1">_, err = dbTx.Exec(`update MerchantBalances SET balance = balance + $1 where merchant_id = $2`,
+                tx.Amount, tx.MerchantID)
+        if err != nil </span><span class="cov8" title="1">{
+                dbTx.Rollback()
+                return err
+        }</span>
+
+        // Step 4: Get the merchant name
+        <span class="cov8" title="1">err = dbTx.QueryRow(`SELECT name FROM Merchants WHERE id = $1`, tx.MerchantID).Scan(&amp;tx.MerchantName)
+        if err != nil </span><span class="cov8" title="1">{
+                dbTx.Rollback()
+                return err
+        }</span>
+
+        // Commit the transaction
+        <span class="cov8" title="1">err = dbTx.Commit()
+        if err != nil </span><span class="cov8" title="1">{
+                dbTx.Rollback()
+                return err
+        }</span>
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (t *transactionRepository) GetCustomerTransactionByID(custID int) ([]model.Transaction, error) <span class="cov8" title="1">{
+        rows, err := t.db.Query(`
+                SELECT t.*, m.name 
+                FROM Transactions t 
+                JOIN Merchants m ON t.merchant_id = m.id 
+                WHERE t.customer_id = $1 
+                ORDER BY t.created_at DESC
+        `, custID)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">defer rows.Close()
+
+        var transactions []model.Transaction
+        for rows.Next() </span><span class="cov8" title="1">{
+                var tx model.Transaction
+                err = rows.Scan(&amp;tx.ID, &amp;tx.CustomerID, &amp;tx.MerchantID, &amp;tx.BankAccountID, &amp;tx.Amount, &amp;tx.CreatedAt, &amp;tx.UpdatedAt, &amp;tx.MerchantName) // Added MerchantName
+                if err != nil </span><span class="cov8" title="1">{
+                        return nil, err
+                }</span>
+                <span class="cov8" title="1">transactions = append(transactions, tx)</span>
+        }
+
+        <span class="cov8" title="1">if err = rows.Err(); err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">return transactions, nil</span>
+}
+
+func NewTransactionRepository(db *sql.DB) TransactionRepository <span class="cov8" title="1">{
+        return &amp;transactionRepository{
+                db: db,
+        }
+}</span>
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package repository
+
+import (
+        "context"
+        "database/sql"
+        "errors"
+        "mnc-test/model"
+)
+
+type TransferRepository interface {
+        MakeTransferAccNumbToAccNumb(transactionID string, senderAccountNumber string, receiverAccountNumber string, amount int) error
+        GetIncomingMoney(customerId int) ([]model.TransferHistoryIncome, error)
+        GetOutcomeMoney(customerId int) ([]model.TransferHistoryOutcome, error)
+}
+
+type transferRepository struct {
+        db *sql.DB
+}
+
+func (t transferRepository) MakeTransferAccNumbToAccNumb(transactionID string, senderAccountNumber string, receiverAccountNumber string, amount int) error <span class="cov8" title="1">{
+        // Start a new transaction
+        tx, err := t.db.BeginTx(context.Background(), &amp;sql.TxOptions{Isolation: sql.LevelSerializable})
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        // Rollback if anything goes wrong
+        <span class="cov8" title="1">defer func() </span><span class="cov8" title="1">{
+                if p := recover(); p != nil </span><span class="cov0" title="0">{
+                        tx.Rollback()
+                }</span>
+        }()
+
+        // Check if the sender has enough balance
+        <span class="cov8" title="1">var senderBalance int
+        err = tx.QueryRow("select balance from bankaccounts where account_number = $1 for update", senderAccountNumber).Scan(&amp;senderBalance)
+        if err != nil </span><span class="cov8" title="1">{
+                tx.Rollback()
+                return err
+        }</span>
+
+        <span class="cov8" title="1">if senderBalance &lt; amount </span><span class="cov8" title="1">{
+                tx.Rollback()
+                return errors.New("Insufficient balance")
+        }</span>
+
+        // update the sender's balance
+        <span class="cov8" title="1">_, err = tx.Exec("update bankaccounts set balance = balance - $1 where account_number = $2", amount, senderAccountNumber)
+        if err != nil </span><span class="cov8" title="1">{
+                tx.Rollback()
+                return err
+        }</span>
+
+        // update the receiver's balance
+        <span class="cov8" title="1">_, err = tx.Exec("update bankaccounts set balance = balance + $1 where account_number = $2", amount, receiverAccountNumber)
+        if err != nil </span><span class="cov8" title="1">{
+                tx.Rollback()
+                return err
+        }</span>
+
+        // Insert the transfer details into the transfer_history table
+        <span class="cov8" title="1">_, err = tx.Exec("insert into transfer_history (transaction_id, sender_account_number, receiver_account_number, amount) values ($1, $2, $3, $4)", transactionID, senderAccountNumber, receiverAccountNumber, amount)
+        if err != nil </span><span class="cov8" title="1">{
+                tx.Rollback()
+                return err
+        }</span>
+
+        <span class="cov8" title="1">err = tx.Commit()
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (t transferRepository) GetIncomingMoney(customerId int) ([]model.TransferHistoryIncome, error) <span class="cov8" title="1">{
+        var accountNumber string
+
+        // Fetch the account number
+        err := t.db.QueryRow("select account_number from bankaccounts where customer_id = $1", customerId).Scan(&amp;accountNumber)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">rows, err := t.db.Query(`
+        select th.id, th.transaction_id, th.sender_account_number, th.receiver_account_number, th.amount, th.transfer_timestamp, 
+        b1.name as sender_bank_name, b1.id as sender_bank_id,
+        b2.name as receiver_bank_name, b2.id as receiver_bank_id 
+        from transfer_history th
+        join bankaccounts ba1 on th.sender_account_number = ba1.account_number
+        join banks b1 on ba1.bank_id = b1.id
+        join bankaccounts ba2 on th.receiver_account_number = ba2.account_number
+        join banks b2 on ba2.bank_id = b2.id
+        where ba1.customer_id = $1 OR ba2.customer_id = $1`, customerId)
+
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">defer rows.Close()
+
+        transfers := []model.TransferHistoryIncome{}
+
+        for rows.Next() </span><span class="cov8" title="1">{
+                var transfer model.TransferHistoryIncome
+                err = rows.Scan(&amp;transfer.ID, &amp;transfer.TransactionID, &amp;transfer.SenderAccountNumber, &amp;transfer.ReceiverAccountNumber, &amp;transfer.Amount, &amp;transfer.TransferTimeStamp, &amp;transfer.SenderBankName, &amp;transfer.SenderBankId, &amp;transfer.ReceiverBankName, &amp;transfer.ReceiverBankId)
+                if err != nil </span><span class="cov8" title="1">{
+                        return nil, err
+                }</span>
+                <span class="cov8" title="1">transfers = append(transfers, transfer)</span>
+        }
+
+        <span class="cov8" title="1">if err = rows.Err(); err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">return transfers, nil</span>
+}
+
+func (t transferRepository) GetOutcomeMoney(customerId int) ([]model.TransferHistoryOutcome, error) <span class="cov8" title="1">{
+        var accountNumber string
+
+        // Fetch the account number
+        err := t.db.QueryRow("select account_number from bankaccounts where customer_id = $1", customerId).Scan(&amp;accountNumber)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">rows, err := t.db.Query(`
+        select th.id, th.transaction_id, th.sender_account_number, th.receiver_account_number, th.amount, th.transfer_timestamp, 
+        b1.name as sender_bank_name, b1.id as sender_bank_id,
+        b2.name as receiver_bank_name, b2.id as receiver_bank_id 
+        from transfer_history th
+        join bankaccounts ba1 on th.sender_account_number = ba1.account_number
+        join banks b1 on ba1.bank_id = b1.id
+        join bankaccounts ba2 on th.receiver_account_number = ba2.account_number
+        join banks b2 on ba2.bank_id = b2.id
+        where ba1.customer_id = $1`, customerId)
+
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">defer rows.Close()
+
+        transfers := []model.TransferHistoryOutcome{}
+
+        for rows.Next() </span><span class="cov8" title="1">{
+                var transfer model.TransferHistoryOutcome
+                err = rows.Scan(&amp;transfer.ID, &amp;transfer.TransactionID, &amp;transfer.SenderAccountNumber, &amp;transfer.ReceiverAccountNumber, &amp;transfer.Amount, &amp;transfer.TransferTimeStamp, &amp;transfer.SenderBankName, &amp;transfer.SenderBankId, &amp;transfer.ReceiverBankName, &amp;transfer.ReceiverBankId)
+                if err != nil </span><span class="cov0" title="0">{
+                        return nil, err
+                }</span>
+                <span class="cov8" title="1">transfers = append(transfers, transfer)</span>
+        }
+
+        <span class="cov8" title="1">if err = rows.Err(); err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">return transfers, nil</span>
+}
+
+func NewTransferRepository(db *sql.DB) TransferRepository <span class="cov0" title="0">{
+        return &amp;transferRepository{
+                db: db,
+        }
+}</span>
+
+//func (t transferRepository) MakeTransferPhoneNumbToPhoneNumb(transactionID string, senderPhoneNumber string, receiverPhoneNumber string, amount int) error {
+//        // Start a new transaction
+//        tx, err := t.db.BeginTx(context.Background(), &amp;sql.TxOptions{Isolation: sql.LevelSerializable})
+//        if err != nil {
+//                return err
+//        }
+//
+//        // Rollback if anything goes wrong
+//        defer func() {
+//                if p := recover(); p != nil {
+//                        tx.Rollback()
+//                }
+//        }()
+//
+//        var senderCustomerId, receiverCustomerId int
+//        var senderAccountNumber, receiverAccountNumber string
+//
+//        // Fetch the sender's customer ID
+//        err = tx.QueryRow("select id from customers where phone_number = $1", senderPhoneNumber).Scan(&amp;senderCustomerId)
+//        if err != nil {
+//                tx.Rollback()
+//                return err
+//        }
+//
+//        // Fetch the sender's account number
+//        err = tx.QueryRow("select account_number from bankaccounts where customer_id = $1", senderCustomerId).Scan(&amp;senderAccountNumber)
+//        if err != nil {
+//                tx.Rollback()
+//                return err
+//        }
+//
+//        // Fetch the receiver's customer ID
+//        err = tx.QueryRow("select id from customers where phone_number = $1", receiverPhoneNumber).Scan(&amp;receiverCustomerId)
+//        if err != nil {
+//                tx.Rollback()
+//                return err
+//        }
+//
+//        // Fetch the receiver's account number
+//        err = tx.QueryRow("select account_number from bankaccounts where customer_id = $1", receiverCustomerId).Scan(&amp;receiverAccountNumber)
+//        if err != nil {
+//                tx.Rollback()
+//                return err
+//        }
+//
+//        // Check if the sender has enough balance
+//        var senderBalance int
+//        err = tx.QueryRow("select balance from bankaccounts where account_number = $1 FOR update", senderAccountNumber).Scan(&amp;senderBalance)
+//        if err != nil {
+//                tx.Rollback()
+//                return err
+//        }
+//
+//        if senderBalance &lt; amount {
+//                tx.Rollback()
+//                return errors.New("Insufficient balance")
+//        }
+//
+//        // update the sender's balance
+//        _, err = tx.Exec("update bankaccounts SET balance = balance - $1 where account_number = $2", amount, senderAccountNumber)
+//        if err != nil {
+//                tx.Rollback()
+//                return err
+//        }
+//
+//        // update the receiver's balance
+//        _, err = tx.Exec("update bankaccounts SET balance = balance + $1 where account_number = $2", amount, receiverAccountNumber)
+//        if err != nil {
+//                tx.Rollback()
+//                return err
+//        }
+//
+//        // Insert the transfer details into the transfer_history table
+//        _, err = tx.Exec("INSERT INTO transfer_history (transaction_id, sender_account_number, receiver_account_number, amount) VALUES ($1, $2, $3, $4)", transactionID, senderAccountNumber, receiverAccountNumber, amount)
+//        if err != nil {
+//                tx.Rollback()
+//                return err
+//        }
+//
+//        err = tx.Commit()
+//        if err != nil {
+//                return err
+//        }
+//
+//        return nil
+//}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package repository
+
+import (
+        "database/sql"
+        "fmt"
+        "mnc-test/model"
+)
+
+type UserCredential interface {
+        Register(userCred model.UserCredentials) error
+        Login(userCred model.UserCredentials) (string, error)
+        FindUserEMail(email string) (userCred model.UserCredentials, err error)
+}
+
+type userCredential struct {
+        db *sql.DB
+}
+
+func (u userCredential) FindUserEMail(email string) (userCred model.UserCredentials, err error) <span class="cov8" title="1">{
+        //TODO implement me
+
+        query := "select id,email,phone_number,password from Customers where email = $1"
+
+        if err = u.db.QueryRow(query, email).Scan(&amp;userCred.ID, &amp;userCred.Email, &amp;userCred.PhoneNumber, &amp;userCred.Password); err != nil </span><span class="cov0" title="0">{
+                if err == sql.ErrNoRows </span><span class="cov0" title="0">{
+                        return model.UserCredentials{}, fmt.Errorf("Invalid Credential")
+                }</span>
+                <span class="cov0" title="0">return model.UserCredentials{}, fmt.Errorf("Failed to run query %v", err.Error())</span>
+        }
+        <span class="cov8" title="1">return userCred, nil</span>
+}
+
+func (u userCredential) Register(userCred model.UserCredentials) error <span class="cov8" title="1">{
+        //TODO implement me
+        query := "insert into Customers (name,email,phone_number,password) values ($1, $2, $3, $4)"
+
+        _, err := u.db.Exec(query, userCred.Name, userCred.Email, userCred.PhoneNumber, userCred.Password)
+        if err != nil </span><span class="cov8" title="1">{
+                return fmt.Errorf("Failed to exec query %v", err.Error())
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (u userCredential) Login(userCred model.UserCredentials) (string, error) <span class="cov8" title="1">{
+        //TODO implement me
+
+        var hashedPass string
+        query := "select password from Customers where email = $1 "
+        err := u.db.QueryRow(query, userCred.Email).Scan(&amp;hashedPass)
+        if err != nil </span><span class="cov8" title="1">{
+                if err == sql.ErrNoRows </span><span class="cov8" title="1">{
+                        return "", fmt.Errorf("Invalid Credentials %v", err.Error())
+                }</span>
+                <span class="cov8" title="1">return "", fmt.Errorf("Failed to exec query")</span>
+        }
+        <span class="cov8" title="1">return hashedPass, nil</span>
+}
+
+func NewUserCredentials(db *sql.DB) UserCredential <span class="cov8" title="1">{
+        return &amp;userCredential{
+                db: db,
+        }
+}</span>
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package usecase
+
+import (
+        "fmt"
+        "mnc-test/model"
+        "mnc-test/repository"
+)
+
+type MerchantUsecase interface {
+        CreateNewMerchant(merchant model.Merchant) error
+        FindAllMerchant() ([]model.Merchant, error)
+}
+
+type merchantUsecase struct {
+        merchantRepo repository.MerchantRepository
+}
+
+func (m *merchantUsecase) CreateNewMerchant(merchant model.Merchant) error <span class="cov8" title="1">{
+        //TODO implement me
+
+        if merchant.Name == "" </span><span class="cov0" title="0">{
+                return fmt.Errorf("Name is required")
+        }</span>
+
+        <span class="cov8" title="1">if err := m.merchantRepo.CreateNewMerchant(merchant); err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("Failed to create merchant %v", err.Error())
+        }</span>
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (m *merchantUsecase) FindAllMerchant() ([]model.Merchant, error) <span class="cov8" title="1">{
+        //TODO implement me
+
+        merchant, err := m.merchantRepo.FindAllMerchant()
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf(err.Error())
+        }</span>
+        <span class="cov8" title="1">return merchant, nil</span>
+}
+
+func NewMerchantUsecase(muc repository.MerchantRepository) MerchantUsecase <span class="cov8" title="1">{
+        return &amp;merchantUsecase{
+                merchantRepo: muc,
+        }
+}</span>
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">package usecase
+
+import (
+        "fmt"
+        "go.uber.org/zap"
+        "mnc-test/model"
+        "mnc-test/repository"
+)
+
+type TransactionUsecase interface {
+        MakePayment(tx *model.Transaction) error
+        GetCustomerTransaction(custID int) ([]model.Transaction, error)
+}
+
+type transactionUsecase struct {
+        txRepo repository.TransactionRepository
+        logger *zap.Logger
+}
+
+func (t transactionUsecase) MakePayment(tx *model.Transaction) error <span class="cov8" title="1">{
+        //TODO implement me
+
+        if tx.MerchantID == 0 </span><span class="cov0" title="0">{
+                return fmt.Errorf("merchant ID cannot be zero")
+        }</span> else<span class="cov8" title="1"> if tx.Amount == 0 </span><span class="cov0" title="0">{
+                return fmt.Errorf("amount cannot be zero")
+        }</span>
+
+        <span class="cov8" title="1">if err := t.txRepo.MakePayment(tx); err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf(err.Error())
+        }</span>
+
+        //log
+        <span class="cov8" title="1">if t.logger != nil </span><span class="cov0" title="0">{
+                t.logger.Info("A payment has been made",
+                        zap.Int("customerID", tx.CustomerID),
+                        zap.Int("merchantID", tx.MerchantID),
+                        zap.Int("amount", tx.Amount))
+        }</span> else<span class="cov8" title="1"> {
+                fmt.Println("Logger is not initialized")
+        }</span>
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (t transactionUsecase) GetCustomerTransaction(custID int) ([]model.Transaction, error) <span class="cov8" title="1">{
+        //TODO implement me
+
+        if custID == 0 </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("customer id cannot empty")
+        }</span>
+
+        <span class="cov8" title="1">txs, err := t.txRepo.GetCustomerTransactionByID(custID)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf(err.Error())
+        }</span>
+
+        <span class="cov8" title="1">return txs, nil</span>
+}
+
+func NewTransactionUsecase(txrepo repository.TransactionRepository, logger *zap.Logger) TransactionUsecase <span class="cov8" title="1">{
+        return &amp;transactionUsecase{
+                txRepo: txrepo,
+                logger: logger,
+        }
+}</span>
+</pre>
+		
+		<pre class="file" id="file6" style="display: none">package usecase
+
+import (
+        "fmt"
+        "go.uber.org/zap"
+        "mnc-test/model"
+        "mnc-test/repository"
+        "mnc-test/util/helper"
+)
+
+type TransferUsecase interface {
+        MakeTransferAccNumbToAccNumb(transactionID string, senderAccountNumber string, receiverAccountNumber string, amount int) error
+        GetIncomingMoney(customerId int) ([]model.TransferHistoryIncome, error)
+        GetOutcomeMoney(customerId int) ([]model.TransferHistoryOutcome, error)
+}
+
+type transferUsecase struct {
+        tfRepo repository.TransferRepository
+        log    *zap.Logger
+}
+
+func (t *transferUsecase) MakeTransferAccNumbToAccNumb(transactionID string, senderAccountNumber string, receiverAccountNumber string, amount int) error <span class="cov8" title="1">{
+        //TODO implement me
+
+        //validasi dsini
+        if senderAccountNumber == "" </span><span class="cov0" title="0">{
+                return fmt.Errorf("account number cannot be empty")
+        }</span> else<span class="cov8" title="1"> if receiverAccountNumber == "" </span><span class="cov0" title="0">{
+                return fmt.Errorf("account number cannot be empty")
+        }</span> else<span class="cov8" title="1"> if amount &lt;= 0 </span><span class="cov0" title="0">{
+                return fmt.Errorf("amount must greater than zero")
+        }</span>
+
+        //generate uuid in here
+        <span class="cov8" title="1">transactionID = helper.GenerateUUID()
+
+        if err := t.tfRepo.MakeTransferAccNumbToAccNumb(transactionID, senderAccountNumber, receiverAccountNumber, amount); err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf(err.Error())
+        }</span>
+
+        //log
+        <span class="cov8" title="1">if t.log != nil </span><span class="cov0" title="0">{
+                t.log.Info("Request transfer money has been initiated",
+                        zap.String("senderAcountNumber", senderAccountNumber),
+                        zap.String("receiverAccountNumber", receiverAccountNumber),
+                        zap.Int("amount", amount))
+        }</span> else<span class="cov8" title="1"> {
+                fmt.Println("Logger is not initialized")
+        }</span>
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (t *transferUsecase) GetIncomingMoney(customerId int) ([]model.TransferHistoryIncome, error) <span class="cov8" title="1">{
+        //TODO implement me
+
+        if customerId == 0 </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("ID is required")
+        }</span>
+
+        <span class="cov8" title="1">incomings, err := t.tfRepo.GetIncomingMoney(customerId)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">return incomings, nil</span>
+}
+
+func (t *transferUsecase) GetOutcomeMoney(customerId int) ([]model.TransferHistoryOutcome, error) <span class="cov8" title="1">{
+        //TODO implement me
+        if customerId == 0 </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("ID is required")
+        }</span>
+
+        <span class="cov8" title="1">outcomings, err := t.tfRepo.GetOutcomeMoney(customerId)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">return outcomings, nil</span>
+}
+
+func NewTransferUsecase(tfrepo repository.TransferRepository, log *zap.Logger) TransferUsecase <span class="cov8" title="1">{
+        return &amp;transferUsecase{
+                tfRepo: tfrepo,
+                log:    log,
+        }
+}</span>
+
+//func (t *transferUsecase) MakeTransferPhoneNumbToPhoneNumb(transactionID string, senderPhoneNumber string, receiverPhoneNumber string, amount int) error {
+//        //TODO implement me
+//        //validasi dsini
+//        if senderPhoneNumber == "" {
+//                return fmt.Errorf("account number cannot be empty")
+//        } else if receiverPhoneNumber == "" {
+//                return fmt.Errorf("account number cannot be empty")
+//        } else if amount &lt;= 0 {
+//                return fmt.Errorf("amount must greater than zero")
+//        }
+//
+//        if err := t.tfRepo.MakeTransferPhoneNumbToPhoneNumb(transactionID, senderPhoneNumber, receiverPhoneNumber, amount); err != nil {
+//                return fmt.Errorf(err.Error())
+//        }
+//
+//        //log
+//        if t.log != nil {
+//                t.log.Info("Request transfer money has been initiated",
+//                        zap.String("senderPhoneNumber", senderPhoneNumber),
+//                        zap.String("receiverPhoneNumber", receiverPhoneNumber),
+//                        zap.Int("amount", amount))
+//        } else {
+//                fmt.Println("Logger is not initialized")
+//        }
+//
+//        return nil
+//}
+</pre>
+		
+		<pre class="file" id="file7" style="display: none">package usecase
+
+import (
+        "errors"
+        "fmt"
+        "go.uber.org/zap"
+        "mnc-test/model"
+        "mnc-test/repository"
+        "mnc-test/util/helper"
+        "os"
+        "sync"
+)
+
+type UserCredentialUsecase interface {
+        Register(userCred model.UserCredentials) error
+        Login(userCred model.UserCredentials) (string, error)
+        Logout(userCred model.UserCredentials) error
+        FindUserEMail(email string) (userCred model.UserCredentials, err error)
+}
+
+type userCredentialUsecase struct {
+        usercredRepo   repository.UserCredential
+        tokenBlacklist map[string]bool
+        mu             sync.Mutex // for concurrent map writes
+        log            *zap.Logger
+}
+
+func (u *userCredentialUsecase) Register(userCred model.UserCredentials) error <span class="cov8" title="1">{
+        //TODO implement me
+
+        //generate uuid for user id
+        userCred.ID = helper.GenerateUUID()
+
+        if userCred.Email == "" </span><span class="cov8" title="1">{
+                return fmt.Errorf("Username is required")
+        }</span>
+
+        <span class="cov8" title="1">if userCred.Password == "" </span><span class="cov8" title="1">{
+                return fmt.Errorf("Password is required")
+        }</span>
+
+        //is email alr valid?
+        <span class="cov8" title="1">if err := helper.IsEmailValid(userCred); err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        /*
+                password requirement
+        */
+        <span class="cov8" title="1">if len(userCred.Password) &lt; 6 </span><span class="cov8" title="1">{
+                return fmt.Errorf("Password must contain at least six number")
+        }</span>
+        <span class="cov8" title="1">if !helper.PasswordContainsUppercase(userCred.Password) </span><span class="cov8" title="1">{
+                return fmt.Errorf("Password must contain at least one uppercase letter")
+        }</span>
+
+        <span class="cov8" title="1">if !helper.PasswordContainsSpecialChar(userCred.Password) </span><span class="cov8" title="1">{
+                return fmt.Errorf("Password must contain at least one special character")
+        }</span>
+
+        <span class="cov8" title="1">if !helper.PasswordConstainsOneNumber(userCred.Password) </span><span class="cov8" title="1">{
+                return fmt.Errorf("Password must contain at least one number")
+        }</span>
+
+        //generate password in here
+        <span class="cov8" title="1">hashedPass, err := helper.HashPassword(userCred.Password)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">userCred.Password = hashedPass
+
+        if err = u.usercredRepo.Register(userCred); err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        //log goes hereeee
+        <span class="cov8" title="1">if u.log != nil </span><span class="cov0" title="0">{
+                u.log.Info("New Customer Has Been Created",
+                        zap.String("Custormer Name", userCred.Name),
+                        zap.String("Customer Email", userCred.Email))
+        }</span> else<span class="cov8" title="1"> {
+                fmt.Println("Logger is not initialized")
+        }</span>
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (u *userCredentialUsecase) Login(userCred model.UserCredentials) (string, error) <span class="cov0" title="0">{
+        //TODO implement me
+
+        if userCred.Email == "" </span><span class="cov0" title="0">{
+                return "", fmt.Errorf("Email is required")
+        }</span> else<span class="cov0" title="0"> if userCred.Password == "" </span><span class="cov0" title="0">{
+                return "", fmt.Errorf("Password is required")
+        }</span>
+
+        <span class="cov0" title="0">userHashedPass, err := u.usercredRepo.Login(userCred)
+        if err != nil </span>{<span class="cov0" title="0">
+
+        }</span>
+        //compare password
+        <span class="cov0" title="0">if err = helper.ComparePassword(userHashedPass, userCred.Password); err != nil </span><span class="cov0" title="0">{
+                return "", fmt.Errorf("Invalid Password")
+        }</span>
+
+        //generate paseto or jwt in here
+        <span class="cov0" title="0">symetricKey := os.Getenv("PASETO_SECRET")
+        //jwtsecret := os.Getenv("JWT_SECRET")
+        pasetoToken := helper.GeneratePaseto(userCred.Email, symetricKey)
+
+        if u.log != nil </span><span class="cov0" title="0">{
+                u.log.Info("Customer has been logged in",
+                        zap.String("Customer Email", userCred.Email))
+        }</span> else<span class="cov0" title="0"> {
+                fmt.Println("Logger is not initialized")
+        }</span>
+
+        <span class="cov0" title="0">return pasetoToken, nil</span>
+}
+
+func (u *userCredentialUsecase) FindUserEMail(email string) (userCred model.UserCredentials, err error) <span class="cov8" title="1">{
+        //TODO implement me
+
+        if email == "" </span><span class="cov8" title="1">{
+                return model.UserCredentials{}, fmt.Errorf("Email is required")
+        }</span>
+
+        <span class="cov8" title="1">user, err := u.usercredRepo.FindUserEMail(email)
+        if err != nil </span><span class="cov8" title="1">{
+                return model.UserCredentials{}, err
+        }</span>
+
+        <span class="cov8" title="1">return user, nil</span>
+}
+
+func (u *userCredentialUsecase) Logout(userCred model.UserCredentials) error <span class="cov0" title="0">{
+        // Extract the token from the user credentials
+        // This will depend on how you have structured your UserCredentials model
+        token := userCred.Token
+
+        if token == "" </span><span class="cov0" title="0">{
+                return errors.New("invalid token")
+        }</span>
+
+        // Add the token to the blacklist
+        <span class="cov0" title="0">u.mu.Lock()
+        u.tokenBlacklist[token] = true
+        u.mu.Unlock()
+
+        return nil</span>
+}
+
+func NewUserCredentialUsecase(uc repository.UserCredential, log *zap.Logger) UserCredentialUsecase <span class="cov8" title="1">{
+        return &amp;userCredentialUsecase{
+                usercredRepo:   uc,
+                tokenBlacklist: make(map[string]bool),
+                mu:             sync.Mutex{},
+                log:            log,
+        }
+}</span>
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>

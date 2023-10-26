@@ -1,0 +1,29 @@
+{"level":"info","ts":1698249553.5473595,"caller":"usecase/transaction_usecase.go:36","msg":"A payment has been made","customerID":3,"merchantID":1,"amount":1000}
+{"level":"info","ts":1698249788.5986557,"caller":"usecase/user-credentials-usecase.go:113","msg":"New customer has logged in","Custormer Name":"","Customer Email":"awd@gmail.com"}
+{"level":"info","ts":1698253871.070231,"caller":"usecase/transaction_usecase.go:36","msg":"A payment has been made","customerID":3,"merchantID":1,"amount":1000}
+{"level":"info","ts":1698254029.059385,"caller":"usecase/transaction_usecase.go:36","msg":"A payment has been made","customerID":3,"merchantID":1,"amount":5000}
+{"level":"info","ts":1698258225.9557695,"caller":"usecase/transaction_usecase.go:35","msg":"A payment has been made","customerID":3,"merchantID":1,"amount":5000}
+{"level":"info","ts":1698258280.5561311,"caller":"usecase/transaction_usecase.go:35","msg":"A payment has been made","customerID":3,"merchantID":1,"amount":5000}
+{"level":"info","ts":1698258508.182166,"caller":"usecase/transaction_usecase.go:35","msg":"A payment has been made","customerID":3,"merchantID":1,"amount":5000}
+{"level":"info","ts":1698258809.2386837,"caller":"usecase/transaction_usecase.go:35","msg":"A payment has been made","customerID":3,"merchantID":1,"amount":5000}
+{"level":"info","ts":1698260510.4582343,"caller":"usecase/transfer_usecase.go:36","msg":"Request transfer money has been initiated ....","senderAcountNumber":"12371246","receiverAccountNumber":"12481257","amount":10000}
+{"level":"info","ts":1698260537.9178083,"caller":"usecase/transfer_usecase.go:36","msg":"Request transfer money has been initiated ....","senderAcountNumber":"12371246","receiverAccountNumber":"12481257","amount":1000}
+{"level":"info","ts":1698260544.6814506,"caller":"usecase/transfer_usecase.go:36","msg":"Request transfer money has been initiated ....","senderAcountNumber":"12371246","receiverAccountNumber":"12481257","amount":1000}
+{"level":"info","ts":1698261408.6300561,"caller":"usecase/transfer_usecase.go:36","msg":"Request transfer money has been initiated","senderAcountNumber":"12371246","receiverAccountNumber":"12481257","amount":1000}
+{"level":"info","ts":1698262006.859782,"caller":"usecase/transfer_usecase.go:36","msg":"Request transfer money has been initiated","senderAcountNumber":"12371246","receiverAccountNumber":"12481257","amount":1000}
+{"level":"info","ts":1698287835.199524,"caller":"usecase/transfer_usecase.go:42","msg":"Request transfer money has been initiated","senderAcountNumber":"12371246","receiverAccountNumber":"12481257","amount":1000}
+{"level":"info","ts":1698287879.7498763,"caller":"usecase/transfer_usecase.go:42","msg":"Request transfer money has been initiated","senderAcountNumber":"12371246","receiverAccountNumber":"12481257","amount":1000}
+{"level":"info","ts":1698289293.2727795,"caller":"usecase/transfer_usecase.go:43","msg":"Request transfer money has been initiated","senderAcountNumber":"12371246","receiverAccountNumber":"12481257","amount":1000}
+{"level":"info","ts":1698289821.0260215,"caller":"usecase/transfer_usecase.go:74","msg":"Request transfer money has been initiated","senderPhoneNumber":"085156810932","receiverPhoneNumber":"085156810912","amount":20000}
+{"level":"info","ts":1698289850.2597063,"caller":"usecase/transfer_usecase.go:74","msg":"Request transfer money has been initiated","senderPhoneNumber":"085156810932","receiverPhoneNumber":"085156810912","amount":20000}
+{"level":"info","ts":1698289907.7162201,"caller":"usecase/transfer_usecase.go:74","msg":"Request transfer money has been initiated","senderPhoneNumber":"085156810932","receiverPhoneNumber":"085156810912","amount":1000}
+{"level":"info","ts":1698290179.4650962,"caller":"usecase/transfer_usecase.go:71","msg":"Request transfer money has been initiated","senderPhoneNumber":"085156810932","receiverPhoneNumber":"085156810912","amount":1000}
+{"level":"info","ts":1698291483.1229656,"caller":"usecase/transfer_usecase.go:43","msg":"Request transfer money has been initiated","senderAcountNumber":"12371246","receiverAccountNumber":"12481257","amount":1000}
+{"level":"info","ts":1698291520.7632465,"caller":"usecase/transfer_usecase.go:43","msg":"Request transfer money has been initiated","senderAcountNumber":"12371246","receiverAccountNumber":"128124756","amount":10000}
+{"level":"info","ts":1698291610.1573002,"caller":"usecase/transfer_usecase.go:43","msg":"Request transfer money has been initiated","senderAcountNumber":"12371246","receiverAccountNumber":"128124756","amount":10000}
+{"level":"info","ts":1698291776.9479194,"caller":"usecase/transfer_usecase.go:43","msg":"Request transfer money has been initiated","senderAcountNumber":"12481257","receiverAccountNumber":"128124756","amount":10000}
+{"level":"info","ts":1698291779.3737288,"caller":"usecase/transfer_usecase.go:43","msg":"Request transfer money has been initiated","senderAcountNumber":"12481257","receiverAccountNumber":"128124756","amount":10000}
+{"level":"info","ts":1698291841.860478,"caller":"usecase/transfer_usecase.go:43","msg":"Request transfer money has been initiated","senderAcountNumber":"12481257","receiverAccountNumber":"12371246","amount":10000}
+{"level":"info","ts":1698292191.39337,"caller":"usecase/transfer_usecase.go:43","msg":"Request transfer money has been initiated","senderAcountNumber":"12481257","receiverAccountNumber":"12371246","amount":10000}
+{"level":"info","ts":1698292359.342233,"caller":"usecase/transfer_usecase.go:43","msg":"Request transfer money has been initiated","senderAcountNumber":"12481257","receiverAccountNumber":"128124756","amount":10000}
+{"level":"info","ts":1698293720.6499395,"caller":"usecase/transfer_usecase.go:44","msg":"Request transfer money has been initiated","senderAcountNumber":"12481257","receiverAccountNumber":"128124756","amount":10000}
