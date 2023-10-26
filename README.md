@@ -68,12 +68,17 @@ Requested to create a new merchant :
 ```http
 POST   /auth/logout    //coustomer log out  
 ```
-
 1.User logs in: When a user logs in, they provide their credentials (typically an email and password). The server verifies these credentials, and if they are correct, it generates a unique token for the user. This token is sent back to the user and also stored in Redis with an expiration time of 24 hours.
 
 2.User logs out: When a user wants to log out, they send a request to the logout endpoint with their email in the JSON body. The server then deletes the corresponding entry in Redis.
 
 3.Post-logout access attempts: If a user tries to access a protected endpoint after logging out, their token will no longer be found in Redis when the middleware checks it. Therefore, the access attempt will fail, effectively logging out the user.
+
+I will use this endpoint /app/transaction/list (middleware protected) to test whether the logout method is successful or not. Take a look at this picture; we have successfully logged out from the system.
+
+While I'm using the customer ID for the logout, I can also use other options such as email or phone number. :)
+
+![alt text](https://i.ibb.co/ZHCTYLF/Screenshot-2023-10-26-190104.jpg)
 
 #### Postman Documentation
 https://documenter.getpostman.com/view/29723627/2s9YRFTov9
