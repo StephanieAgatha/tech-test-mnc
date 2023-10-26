@@ -12,14 +12,9 @@
 
 #### Before running this app, make sure you have already installed Redis and connected to it first
 
-#### Paseto expire token (Hour Format) ex :
-```go
-jsonToken := paseto.JSONToken{
-		Issuer:     "Sora Project",
-		Subject:    "Abrakadabra",
-		Expiration: expire,
-		IssuedAt:   now,
-	}
+#### Paseto expire token (Hour Format) on .env :
+```
+PASETO_EXP=5
 ```
 #### Endpoints Available
 
@@ -31,11 +26,11 @@ POST   /auth/logout    //coustomer log out
 
 #### Endpoints (Middleware Protected)
 ```http
-GET    /app/merchants/list   //catch available merchants on database (middleware area)
-POST   /app/merchants/create   //create new mercahnts 
+GET    /app/merchants/list   //catch available merchants on database
+POST   /app/merchants/create   //create new merchant 
 POST   /app/transaction/create //make a new payment to merchant
 POST   /app/transaction/list    //Showing transaction list (that has been made)
-POST   /app/transfer/create/account //make a new trransfer 
+POST   /app/transfer/create/account //make a new transfer 
 POST   /app/transfer/list/income //Showing income history
 POST   /app/transfer/list/outcome //Showing outcome history
 ```
@@ -92,6 +87,15 @@ https://www.postman.com/crimson-crater-616314/workspace/mnc-test/collection/2972
 
 #### Unit test result
 ![alt text](https://i.ibb.co/cFxrvLL/unit-test-res.jpg)
+
+#### Database Definition
+The SQL scripts for setting up the database are provided in two files: table-definition.sql and dummy-insert.sql.
+
+1.table-definition.sql: This file contains the SQL statements to create the necessary tables for our application. It includes definitions for tables such as merchants, merchantbalances, transactions, and transfer_history.
+
+2.dummy-insert.sql: This file contains SQL statements to insert dummy data into the tables. This could be useful for testing or development purposes.
+
+To set up the database, first run the table-definition.sql script to create the tables, then run the dummy-insert.sql script to populate them with data.
 
 #### Stack
 - Gin (Web Framework)
