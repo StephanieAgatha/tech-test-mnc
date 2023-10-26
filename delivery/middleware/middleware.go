@@ -1,14 +1,15 @@
 package middleware
 
 import (
+	"context"
 	"github.com/gin-gonic/gin"
 	"github.com/o1egl/paseto/v2"
+	"github.com/redis/go-redis/v9"
 	"os"
 	"strings"
 )
 
-// paseto section
-func AuthMiddleware() gin.HandlerFunc {
+func AuthMiddleware(redisC *redis.Client) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tokenHeader := c.GetHeader("Authorization")
 
@@ -42,6 +43,15 @@ func AuthMiddleware() gin.HandlerFunc {
 		emailStr, ok := email.(string)
 		if !ok {
 			c.AbortWithStatusJSON(500, gin.H{"Error": "Failed to convert email to string"})
+			return
+		}
+
+		//get email on redis in hereee
+		ctx := context.Background()
+		tokenInRedis, err := redisC.Get(ctx, "user:email:"+emailStr).Result()
+
+		if err != nil || tokenInRedis != tokenHeader {
+			c.AbortWithStatusJSON(401, gin.H{"Error": "Token expired or user logged out"})
 			return
 		}
 

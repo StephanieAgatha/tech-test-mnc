@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"errors"
+	"github.com/redis/go-redis/v9"
 	"mnc-test/model"
 	"testing"
 
@@ -31,6 +32,12 @@ func (m *MockUserCredentialRepository) Register(userCred model.UserCredentials) 
 func TestUserCredentialUsecase_Register(t *testing.T) {
 	mockRepo := new(MockUserCredentialRepository)
 
+	client := redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "", //isi jika ada pw nya
+		DB:       0,
+	})
+
 	t.Run("success", func(t *testing.T) {
 		user := model.UserCredentials{
 			Name:     "test",
@@ -42,7 +49,7 @@ func TestUserCredentialUsecase_Register(t *testing.T) {
 			return user.Name == "test" && user.Email == "test@test.com"
 		})).Return(nil)
 
-		u := NewUserCredentialUsecase(mockRepo, nil)
+		u := NewUserCredentialUsecase(mockRepo, client)
 		err := u.Register(user)
 
 		assert.NoError(t, err)
@@ -57,7 +64,7 @@ func TestUserCredentialUsecase_Register(t *testing.T) {
 			Password: "Password1!",
 		}
 
-		u := NewUserCredentialUsecase(mockRepo, nil)
+		u := NewUserCredentialUsecase(mockRepo, client)
 		err := u.Register(user)
 
 		assert.Error(t, err)
@@ -71,7 +78,7 @@ func TestUserCredentialUsecase_Register(t *testing.T) {
 			Password: "",
 		}
 
-		u := NewUserCredentialUsecase(mockRepo, nil)
+		u := NewUserCredentialUsecase(mockRepo, client)
 		err := u.Register(user)
 
 		assert.Error(t, err)
@@ -84,7 +91,7 @@ func TestUserCredentialUsecase_Register(t *testing.T) {
 			Password: "Pwd1!",
 		}
 
-		u := NewUserCredentialUsecase(mockRepo, nil)
+		u := NewUserCredentialUsecase(mockRepo, client)
 		err := u.Register(user)
 
 		assert.Error(t, err)
@@ -98,7 +105,7 @@ func TestUserCredentialUsecase_Register(t *testing.T) {
 			Password: "password1!",
 		}
 
-		u := NewUserCredentialUsecase(mockRepo, nil)
+		u := NewUserCredentialUsecase(mockRepo, client)
 		err := u.Register(user)
 
 		assert.Error(t, err)
@@ -112,7 +119,7 @@ func TestUserCredentialUsecase_Register(t *testing.T) {
 			Password: "Password1",
 		}
 
-		u := NewUserCredentialUsecase(mockRepo, nil)
+		u := NewUserCredentialUsecase(mockRepo, client)
 		err := u.Register(user)
 
 		assert.Error(t, err)
@@ -126,7 +133,7 @@ func TestUserCredentialUsecase_Register(t *testing.T) {
 			Password: "Password!",
 		}
 
-		u := NewUserCredentialUsecase(mockRepo, nil)
+		u := NewUserCredentialUsecase(mockRepo, client)
 		err := u.Register(user)
 
 		assert.Error(t, err)
@@ -137,6 +144,12 @@ func TestUserCredentialUsecase_Register(t *testing.T) {
 // finduseremail test
 func TestUserCredentialUsecase_FindUserEmail(t *testing.T) {
 	mockRepo := new(MockUserCredentialRepository)
+
+	client := redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "", //isi jika ada pw nya
+		DB:       0,
+	})
 
 	t.Run("success", func(t *testing.T) {
 		email := "test@helowww.com"
@@ -150,7 +163,7 @@ func TestUserCredentialUsecase_FindUserEmail(t *testing.T) {
 			return email == "test@helowww.com"
 		})).Return(user, nil)
 
-		u := NewUserCredentialUsecase(mockRepo, nil)
+		u := NewUserCredentialUsecase(mockRepo, client)
 		foundUser, err := u.FindUserEMail(email)
 
 		assert.NoError(t, err)
@@ -162,7 +175,7 @@ func TestUserCredentialUsecase_FindUserEmail(t *testing.T) {
 	t.Run("error - no email", func(t *testing.T) {
 		email := ""
 
-		u := NewUserCredentialUsecase(mockRepo, nil)
+		u := NewUserCredentialUsecase(mockRepo, client)
 		foundUser, err := u.FindUserEMail(email)
 
 		assert.Error(t, err)
@@ -177,7 +190,7 @@ func TestUserCredentialUsecase_FindUserEmail(t *testing.T) {
 			return email == "abra@cyaa.com"
 		})).Return(model.UserCredentials{}, errors.New("user not found"))
 
-		u := NewUserCredentialUsecase(mockRepo, nil)
+		u := NewUserCredentialUsecase(mockRepo, client)
 		foundUser, err := u.FindUserEMail(email)
 
 		assert.Error(t, err)

@@ -1,7 +1,10 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/redis/go-redis/v9"
+	"go.uber.org/zap"
 	"mnc-test/delivery/middleware"
 	"mnc-test/model"
 	"mnc-test/usecase"
@@ -9,8 +12,10 @@ import (
 )
 
 type TransactionController struct {
-	txUc usecase.TransactionUsecase
-	g    *gin.Engine
+	txUc   usecase.TransactionUsecase
+	g      *gin.Engine
+	redisC *redis.Client
+	logger *zap.Logger
 }
 
 func (t TransactionController) MakePaymentController(c *gin.Context) {
@@ -31,6 +36,16 @@ func (t TransactionController) MakePaymentController(c *gin.Context) {
 		MerchantName: tx.MerchantName,
 		Amount:       tx.Amount,
 		CreatedAt:    time.Now().Format("2006-01-02 15:04:05"),
+	}
+
+	//log
+	if t.logger != nil {
+		t.logger.Info("A payment has been made",
+			zap.Int("customerID", tx.CustomerID),
+			zap.Int("merchantID", tx.MerchantID),
+			zap.Int("amount", tx.Amount))
+	} else {
+		fmt.Println("Logger is not initialized")
 	}
 
 	c.JSON(200, gin.H{"Message": "Successfully", "Data": response})
@@ -67,20 +82,30 @@ func (t TransactionController) GetCustTransactionByIDHandler(c *gin.Context) {
 		})
 	}
 
+	//log
+	if t.logger != nil {
+		t.logger.Info("Requested Get Transactions",
+			zap.Int("customerID", custid.CustID))
+	} else {
+		fmt.Println("Logger is not initialized")
+	}
+
 	c.JSON(200, gin.H{"Data": txResponses})
 }
 
 func (t TransactionController) Route() {
 	txGroup := t.g.Group("/app/transaction")
 	{
-		txGroup.POST("/create", middleware.AuthMiddleware(), t.MakePaymentController)
-		txGroup.POST("/list", middleware.AuthMiddleware(), t.GetCustTransactionByIDHandler)
+		txGroup.POST("/create", middleware.AuthMiddleware(t.redisC), t.MakePaymentController)
+		txGroup.POST("/list", middleware.AuthMiddleware(t.redisC), t.GetCustTransactionByIDHandler)
 	}
 }
 
-func NewTransactionController(txuc usecase.TransactionUsecase, g *gin.Engine) *TransactionController {
+func NewTransactionController(txuc usecase.TransactionUsecase, g *gin.Engine, disredis *redis.Client, log *zap.Logger) *TransactionController {
 	return &TransactionController{
-		txUc: txuc,
-		g:    g,
+		txUc:   txuc,
+		g:      g,
+		redisC: disredis,
+		logger: log,
 	}
 }

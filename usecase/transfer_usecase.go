@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"fmt"
-	"go.uber.org/zap"
 	"mnc-test/model"
 	"mnc-test/repository"
 	"mnc-test/util/helper"
@@ -16,7 +15,6 @@ type TransferUsecase interface {
 
 type transferUsecase struct {
 	tfRepo repository.TransferRepository
-	log    *zap.Logger
 }
 
 func (t *transferUsecase) MakeTransferAccNumbToAccNumb(transactionID string, senderAccountNumber string, receiverAccountNumber string, amount int) error {
@@ -36,16 +34,6 @@ func (t *transferUsecase) MakeTransferAccNumbToAccNumb(transactionID string, sen
 
 	if err := t.tfRepo.MakeTransferAccNumbToAccNumb(transactionID, senderAccountNumber, receiverAccountNumber, amount); err != nil {
 		return fmt.Errorf(err.Error())
-	}
-
-	//log
-	if t.log != nil {
-		t.log.Info("Request transfer money has been initiated",
-			zap.String("senderAcountNumber", senderAccountNumber),
-			zap.String("receiverAccountNumber", receiverAccountNumber),
-			zap.Int("amount", amount))
-	} else {
-		fmt.Println("Logger is not initialized")
 	}
 
 	return nil
@@ -80,10 +68,9 @@ func (t *transferUsecase) GetOutcomeMoney(customerId int) ([]model.TransferHisto
 	return outcomings, nil
 }
 
-func NewTransferUsecase(tfrepo repository.TransferRepository, log *zap.Logger) TransferUsecase {
+func NewTransferUsecase(tfrepo repository.TransferRepository) TransferUsecase {
 	return &transferUsecase{
 		tfRepo: tfrepo,
-		log:    log,
 	}
 }
 

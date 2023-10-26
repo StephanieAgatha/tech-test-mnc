@@ -57,7 +57,18 @@ Customer has successfully transferred money: :
 ```
 {"level":"info","ts":1698291841.860478,"caller":"usecase/transfer_usecase.go:43","msg":"Request transfer money has been initiated","senderAcountNumber":"12481257","receiverAccountNumber":"12371246","amount":10000}
 ```
+Requested to create a new merchant :
+```
+{"level":"info","ts":1698319011.2144413,"caller":"controller/merchant-controller.go:35","msg":"New merchant has been created","Merchant Name":"haji barokah"}
+```
 
+#### Logout Method
+```http
+POST   /auth/logout    //coustomer log out  
+```
+1.User logs out: When a user wants to log out, they send a request to the logout endpoint with their email in the JSON body. The server then deletes the corresponding entry in Redis.
+
+2.Post-logout access attempts: If a user tries to access a protected endpoint after logging out, their token will no longer be found in Redis when the middleware checks it. Therefore, the access attempt will fail, effectively logging out the user.
 
 #### Postman Documentation
 https://documenter.getpostman.com/view/29723627/2s9YRFTov9
@@ -65,10 +76,11 @@ https://documenter.getpostman.com/view/29723627/2s9YRFTov9
 #### Postman Collection
 https://www.postman.com/crimson-crater-616314/workspace/mnc-test/collection/29723627-aed2b8b7-fb73-42b9-be9e-9457d38871ba?action=share&creator=29723627
 
+#### Unit test result
+![alt text](https://i.ibb.co/cFxrvLL/unit-test-res.jpg)
 
 #### Stack
-- Gin
-- JWT
-- Paseto
-- Zap
-
+- Gin (Web Framework)
+- Paseto (Security concern)
+- Zap (Logging)
+- Redis (Caching)

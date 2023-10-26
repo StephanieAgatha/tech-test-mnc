@@ -3,6 +3,7 @@ package delivery
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
 	"mnc-test/config"
 	"mnc-test/delivery/controller"
@@ -11,10 +12,11 @@ import (
 )
 
 type Server struct {
-	um   manager.UsecaseManager
-	gin  *gin.Engine
-	log  *zap.Logger
-	host string
+	um          manager.UsecaseManager
+	gin         *gin.Engine
+	log         *zap.Logger
+	host        string
+	redisClient *redis.Client
 }
 
 // middleware goes here
@@ -24,10 +26,10 @@ func (s *Server) InitMiddleware() {
 
 // controller
 func (s *Server) InitController() {
-	controller.NewUserCredentialController(s.um.UserCredUsecase(), s.gin).Route()
-	controller.NewMerchantController(s.um.MerchantUsecase(), s.gin).Route()
-	controller.NewTransactionController(s.um.TransactionUsecase(), s.gin).Route()
-	controller.NewTransferController(s.um.TransferUsecase(), s.gin).Route()
+	controller.NewUserCredentialController(s.um.UserCredUsecase(), s.gin, s.redisClient, s.log).Route()
+	controller.NewMerchantController(s.um.MerchantUsecase(), s.gin, s.redisClient, s.log).Route()
+	controller.NewTransactionController(s.um.TransactionUsecase(), s.gin, s.redisClient, s.log).Route()
+	controller.NewTransferController(s.um.TransferUsecase(), s.gin, s.redisClient, s.log).Route()
 }
 
 // run server
@@ -40,7 +42,7 @@ func (s *Server) Run() {
 	}
 }
 
-func NewServer() *Server {
+func NewServer() (*Server, error) {
 	// zap logger goes here baby
 	zapconf := zap.Config{
 		Level:       zap.NewAtomicLevelAt(zap.DebugLevel),
@@ -60,31 +62,41 @@ func NewServer() *Server {
 	}
 	defer logger.Sync()
 
-	//define contrusctor from config
-	cfg, err := config.NewDbConfig()
+	cfg, err := config.NewConfig()
 	if err != nil {
 		logger.Error("Failed on config server", zap.String("error", err.Error()))
+		return nil, err
 	}
 
 	//constructor from infra
 	im, err := manager.NewInfraManager(cfg)
 	if err != nil {
 		logger.Error("Failed on construct infra", zap.String("error", err.Error()))
+		return nil, err
 	}
+
+	//get the Redis client from the infraManager
+	redisClient := im.GetRedisClient()
 
 	//constructor from repomanager
 	rm := manager.NewRepoManager(im)
 	//contructor from usecase manager
-	um := manager.NewUsecaseManager(rm, logger)
+	um := manager.NewUsecaseManager(rm, redisClient)
 
 	//set host for gin server
 	host := fmt.Sprintf("%s:%s", cfg.ApiConfig.Host, cfg.ApiConfig.Port)
 	//return gin instance
 	g := gin.Default()
-	return &Server{
-		um:   um,
-		gin:  g,
-		log:  logger,
-		host: host,
+
+	if err != nil {
+		return nil, fmt.Errorf("Failed to construct infra: %v", err)
 	}
+
+	return &Server{
+		um:          um,
+		gin:         g,
+		log:         logger,
+		host:        host,
+		redisClient: redisClient,
+	}, nil
 }

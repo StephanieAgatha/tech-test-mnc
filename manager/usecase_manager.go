@@ -1,7 +1,7 @@
 package manager
 
 import (
-	"go.uber.org/zap"
+	"github.com/redis/go-redis/v9"
 	"mnc-test/usecase"
 )
 
@@ -14,12 +14,12 @@ type UsecaseManager interface {
 }
 
 type usecaseManager struct {
-	rm  RepoManager
-	log *zap.Logger
+	rm     RepoManager
+	redisC *redis.Client
 }
 
 func (u usecaseManager) UserCredUsecase() usecase.UserCredentialUsecase {
-	return usecase.NewUserCredentialUsecase(u.rm.UserCredRepo(), u.log)
+	return usecase.NewUserCredentialUsecase(u.rm.UserCredRepo(), u.redisC)
 }
 
 func (u usecaseManager) MerchantUsecase() usecase.MerchantUsecase {
@@ -29,17 +29,17 @@ func (u usecaseManager) MerchantUsecase() usecase.MerchantUsecase {
 
 func (u usecaseManager) TransactionUsecase() usecase.TransactionUsecase {
 	//TODO implement me
-	return usecase.NewTransactionUsecase(u.rm.TransactionRepo(), u.log)
+	return usecase.NewTransactionUsecase(u.rm.TransactionRepo())
 }
 
 func (u usecaseManager) TransferUsecase() usecase.TransferUsecase {
 	//TODO implement me
-	return usecase.NewTransferUsecase(u.rm.TransferRepo(), u.log)
+	return usecase.NewTransferUsecase(u.rm.TransferRepo())
 }
 
-func NewUsecaseManager(rm RepoManager, log *zap.Logger) UsecaseManager {
+func NewUsecaseManager(rm RepoManager, redisC *redis.Client) UsecaseManager {
 	return &usecaseManager{
-		rm:  rm,
-		log: log,
+		rm:     rm,
+		redisC: redisC,
 	}
 }

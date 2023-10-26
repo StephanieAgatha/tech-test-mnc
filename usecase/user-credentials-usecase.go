@@ -3,7 +3,7 @@ package usecase
 import (
 	"errors"
 	"fmt"
-	"go.uber.org/zap"
+	"github.com/redis/go-redis/v9"
 	"mnc-test/model"
 	"mnc-test/repository"
 	"mnc-test/util/helper"
@@ -22,7 +22,7 @@ type userCredentialUsecase struct {
 	usercredRepo   repository.UserCredential
 	tokenBlacklist map[string]bool
 	mu             sync.Mutex // for concurrent map writes
-	log            *zap.Logger
+	redisClient    *redis.Client
 }
 
 func (u *userCredentialUsecase) Register(userCred model.UserCredentials) error {
@@ -69,18 +69,8 @@ func (u *userCredentialUsecase) Register(userCred model.UserCredentials) error {
 	}
 
 	userCred.Password = hashedPass
-
 	if err = u.usercredRepo.Register(userCred); err != nil {
 		return err
-	}
-
-	//log goes hereeee
-	if u.log != nil {
-		u.log.Info("New Customer Has Been Created",
-			zap.String("Custormer Name", userCred.Name),
-			zap.String("Customer Email", userCred.Email))
-	} else {
-		fmt.Println("Logger is not initialized")
 	}
 
 	return nil
@@ -106,15 +96,7 @@ func (u *userCredentialUsecase) Login(userCred model.UserCredentials) (string, e
 
 	//generate paseto or jwt in here
 	symetricKey := os.Getenv("PASETO_SECRET")
-	//jwtsecret := os.Getenv("JWT_SECRET")
 	pasetoToken := helper.GeneratePaseto(userCred.Email, symetricKey)
-
-	if u.log != nil {
-		u.log.Info("Customer has been logged in",
-			zap.String("Customer Email", userCred.Email))
-	} else {
-		fmt.Println("Logger is not initialized")
-	}
 
 	return pasetoToken, nil
 }
@@ -135,15 +117,13 @@ func (u *userCredentialUsecase) FindUserEMail(email string) (userCred model.User
 }
 
 func (u *userCredentialUsecase) Logout(userCred model.UserCredentials) error {
-	// Extract the token from the user credentials
-	// This will depend on how you have structured your UserCredentials model
 	token := userCred.Token
 
 	if token == "" {
 		return errors.New("invalid token")
 	}
 
-	// Add the token to the blacklist
+	// blacklist them
 	u.mu.Lock()
 	u.tokenBlacklist[token] = true
 	u.mu.Unlock()
@@ -151,11 +131,9 @@ func (u *userCredentialUsecase) Logout(userCred model.UserCredentials) error {
 	return nil
 }
 
-func NewUserCredentialUsecase(uc repository.UserCredential, log *zap.Logger) UserCredentialUsecase {
+func NewUserCredentialUsecase(usercredRepo repository.UserCredential, redisClient *redis.Client) UserCredentialUsecase {
 	return &userCredentialUsecase{
-		usercredRepo:   uc,
-		tokenBlacklist: make(map[string]bool),
-		mu:             sync.Mutex{},
-		log:            log,
+		usercredRepo: usercredRepo,
+		redisClient:  redisClient,
 	}
 }

@@ -1,7 +1,10 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/redis/go-redis/v9"
+	"go.uber.org/zap"
 	"mnc-test/delivery/middleware"
 	"mnc-test/model"
 	"mnc-test/usecase"
@@ -10,6 +13,8 @@ import (
 type TransferController struct {
 	tfUsecase usecase.TransferUsecase
 	gin       *gin.Engine
+	redisC    *redis.Client
+	log       *zap.Logger
 }
 
 func (t TransferController) TransferAccNumbToAccNumb(c *gin.Context) {
@@ -23,6 +28,16 @@ func (t TransferController) TransferAccNumbToAccNumb(c *gin.Context) {
 	if err := t.tfUsecase.MakeTransferAccNumbToAccNumb(tf.TransactionID, tf.SenderAccountNumber, tf.ReceiverAccountNumber, tf.Amount); err != nil {
 		c.AbortWithStatusJSON(500, gin.H{"Error": err.Error()})
 		return
+	}
+
+	//log
+	if t.log != nil {
+		t.log.Info("Request transfer money has been initiated",
+			zap.String("senderAcountNumber", tf.SenderAccountNumber),
+			zap.String("receiverAccountNumber", tf.ReceiverAccountNumber),
+			zap.Int("amount", tf.Amount))
+	} else {
+		fmt.Println("Logger is not initialized")
 	}
 
 	c.JSON(200, gin.H{"Message": "Successfully", "Data": tf})
@@ -103,15 +118,17 @@ func (t TransferController) GetOutcomeMoneyHandler(c *gin.Context) {
 func (t TransferController) Route() {
 	tfGroup := t.gin.Group("/app/transfer")
 	{
-		tfGroup.POST("/create/account", middleware.AuthMiddleware(), t.TransferAccNumbToAccNumb)
-		tfGroup.POST("/list/income", middleware.AuthMiddleware(), t.GetIncomingMoneyHandler)
-		tfGroup.POST("/list/outcome", middleware.AuthMiddleware(), t.GetOutcomeMoneyHandler)
+		tfGroup.POST("/create/account", middleware.AuthMiddleware(t.redisC), t.TransferAccNumbToAccNumb)
+		tfGroup.POST("/list/income", middleware.AuthMiddleware(t.redisC), t.GetIncomingMoneyHandler)
+		tfGroup.POST("/list/outcome", middleware.AuthMiddleware(t.redisC), t.GetOutcomeMoneyHandler)
 	}
 }
-func NewTransferController(tfUsecase usecase.TransferUsecase, g *gin.Engine) *TransferController {
+func NewTransferController(tfUsecase usecase.TransferUsecase, g *gin.Engine, rediss *redis.Client, log *zap.Logger) *TransferController {
 	return &TransferController{
 		tfUsecase: tfUsecase,
 		gin:       g,
+		redisC:    rediss,
+		log:       log,
 	}
 }
 
