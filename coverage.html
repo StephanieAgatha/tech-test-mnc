@@ -65,7 +65,7 @@
 				
 				<option value="file4">mnc-test/usecase/merchant_usecase.go (70.0%)</option>
 				
-				<option value="file5">mnc-test/usecase/transaction_usecase.go (64.3%)</option>
+				<option value="file5">mnc-test/usecase/transaction_usecase.go (66.7%)</option>
 				
 				<option value="file6">mnc-test/usecase/transfer_usecase.go (65.2%)</option>
 				
@@ -165,8 +165,8 @@ func (t *transactionRepository) MakePayment(tx *model.Transaction) error <span c
         }</span>
 
         // Step 1: Create a new entry in the transactions table
-        <span class="cov8" title="1">_, err = dbTx.Exec(`insert into transactions (customer_id, merchant_id, bank_account_id, amount) values ($1, $2, $3, $4)`,
-                tx.CustomerID, tx.MerchantID, tx.BankAccountID, tx.Amount)
+        <span class="cov8" title="1">_, err = dbTx.Exec(`insert into transactions (customer_id, merchant_id, bank_account_id, amount, transaction_id) values ($1, $2, $3, $4, $5)`,
+                tx.CustomerID, tx.MerchantID, tx.BankAccountID, tx.Amount, tx.TransactionID)
         if err != nil </span><span class="cov8" title="1">{
                 dbTx.Rollback()
                 return err
@@ -221,7 +221,7 @@ func (t *transactionRepository) GetCustomerTransactionByID(custID int) ([]model.
         var transactions []model.Transaction
         for rows.Next() </span><span class="cov8" title="1">{
                 var tx model.Transaction
-                err = rows.Scan(&amp;tx.ID, &amp;tx.CustomerID, &amp;tx.MerchantID, &amp;tx.BankAccountID, &amp;tx.Amount, &amp;tx.CreatedAt, &amp;tx.UpdatedAt, &amp;tx.MerchantName) // Added MerchantName
+                err = rows.Scan(&amp;tx.ID, &amp;tx.CustomerID, &amp;tx.MerchantID, &amp;tx.BankAccountID, &amp;tx.Amount, &amp;tx.CreatedAt, &amp;tx.UpdatedAt, &amp;tx.TransactionID, &amp;tx.MerchantName)
                 if err != nil </span><span class="cov8" title="1">{
                         return nil, err
                 }</span>
@@ -303,7 +303,7 @@ func (t transferRepository) MakeTransferAccNumbToAccNumb(transactionID string, s
         }</span>
 
         // Insert the transfer details into the transfer_history table
-        <span class="cov8" title="1">_, err = tx.Exec("insert into transfer_history (transaction_id, sender_account_number, receiver_account_number, amount) values ($1, $2, $3, $4)", transactionID, senderAccountNumber, receiverAccountNumber, amount)
+        <span class="cov8" title="1">_, err = tx.Exec("insert into transfer_history (transfer_id, sender_account_number, receiver_account_number, amount) values ($1, $2, $3, $4)", transactionID, senderAccountNumber, receiverAccountNumber, amount)
         if err != nil </span><span class="cov8" title="1">{
                 tx.Rollback()
                 return err
@@ -327,7 +327,7 @@ func (t transferRepository) GetIncomingMoney(customerId int) ([]model.TransferHi
         }</span>
 
         <span class="cov8" title="1">rows, err := t.db.Query(`
-        select th.id, th.transaction_id, th.sender_account_number, th.receiver_account_number, th.amount, th.transfer_timestamp, 
+        select th.id, th.transfer_id, th.sender_account_number, th.receiver_account_number, th.amount, th.transfer_timestamp, 
         b1.name as sender_bank_name, b1.id as sender_bank_id,
         b2.name as receiver_bank_name, b2.id as receiver_bank_id 
         from transfer_history th
@@ -346,7 +346,7 @@ func (t transferRepository) GetIncomingMoney(customerId int) ([]model.TransferHi
 
         for rows.Next() </span><span class="cov8" title="1">{
                 var transfer model.TransferHistoryIncome
-                err = rows.Scan(&amp;transfer.ID, &amp;transfer.TransactionID, &amp;transfer.SenderAccountNumber, &amp;transfer.ReceiverAccountNumber, &amp;transfer.Amount, &amp;transfer.TransferTimeStamp, &amp;transfer.SenderBankName, &amp;transfer.SenderBankId, &amp;transfer.ReceiverBankName, &amp;transfer.ReceiverBankId)
+                err = rows.Scan(&amp;transfer.ID, &amp;transfer.TransferID, &amp;transfer.SenderAccountNumber, &amp;transfer.ReceiverAccountNumber, &amp;transfer.Amount, &amp;transfer.TransferTimeStamp, &amp;transfer.SenderBankName, &amp;transfer.SenderBankId, &amp;transfer.ReceiverBankName, &amp;transfer.ReceiverBankId)
                 if err != nil </span><span class="cov8" title="1">{
                         return nil, err
                 }</span>
@@ -370,7 +370,7 @@ func (t transferRepository) GetOutcomeMoney(customerId int) ([]model.TransferHis
         }</span>
 
         <span class="cov8" title="1">rows, err := t.db.Query(`
-        select th.id, th.transaction_id, th.sender_account_number, th.receiver_account_number, th.amount, th.transfer_timestamp, 
+        select th.id, th.transfer_id, th.sender_account_number, th.receiver_account_number, th.amount, th.transfer_timestamp, 
         b1.name as sender_bank_name, b1.id as sender_bank_id,
         b2.name as receiver_bank_name, b2.id as receiver_bank_id 
         from transfer_history th
@@ -616,6 +616,7 @@ import (
         "fmt"
         "mnc-test/model"
         "mnc-test/repository"
+        "mnc-test/util/helper"
 )
 
 type TransactionUsecase interface {
@@ -636,7 +637,10 @@ func (t transactionUsecase) MakePayment(tx *model.Transaction) error <span class
                 return fmt.Errorf("amount cannot be zero")
         }</span>
 
-        <span class="cov8" title="1">if err := t.txRepo.MakePayment(tx); err != nil </span><span class="cov0" title="0">{
+        //generate uuid for transaction id
+        <span class="cov8" title="1">tx.TransactionID = helper.GenerateUUID()
+
+        if err := t.txRepo.MakePayment(tx); err != nil </span><span class="cov0" title="0">{
                 return fmt.Errorf(err.Error())
         }</span>
 
@@ -675,7 +679,7 @@ import (
 )
 
 type TransferUsecase interface {
-        MakeTransferAccNumbToAccNumb(transactionID string, senderAccountNumber string, receiverAccountNumber string, amount int) error
+        MakeTransferAccNumbToAccNumb(senderAccountNumber string, receiverAccountNumber string, amount int) (string, error)
         GetIncomingMoney(customerId int) ([]model.TransferHistoryIncome, error)
         GetOutcomeMoney(customerId int) ([]model.TransferHistoryOutcome, error)
 }
@@ -684,26 +688,26 @@ type transferUsecase struct {
         tfRepo repository.TransferRepository
 }
 
-func (t *transferUsecase) MakeTransferAccNumbToAccNumb(transactionID string, senderAccountNumber string, receiverAccountNumber string, amount int) error <span class="cov8" title="1">{
+func (t *transferUsecase) MakeTransferAccNumbToAccNumb(senderAccountNumber string, receiverAccountNumber string, amount int) (string, error) <span class="cov8" title="1">{
         //TODO implement me
 
         //validasi dsini
         if senderAccountNumber == "" </span><span class="cov0" title="0">{
-                return fmt.Errorf("account number cannot be empty")
+                return "", fmt.Errorf("account number cannot be empty")
         }</span> else<span class="cov8" title="1"> if receiverAccountNumber == "" </span><span class="cov0" title="0">{
-                return fmt.Errorf("account number cannot be empty")
+                return "", fmt.Errorf("account number cannot be empty")
         }</span> else<span class="cov8" title="1"> if amount &lt;= 0 </span><span class="cov0" title="0">{
-                return fmt.Errorf("amount must greater than zero")
+                return "", fmt.Errorf("amount must greater than zero")
         }</span>
 
         //generate uuid in here
-        <span class="cov8" title="1">transactionID = helper.GenerateUUID()
+        <span class="cov8" title="1">transactionID := helper.GenerateUUID()
 
         if err := t.tfRepo.MakeTransferAccNumbToAccNumb(transactionID, senderAccountNumber, receiverAccountNumber, amount); err != nil </span><span class="cov0" title="0">{
-                return fmt.Errorf(err.Error())
+                return "", fmt.Errorf(err.Error())
         }</span>
 
-        <span class="cov8" title="1">return nil</span>
+        <span class="cov8" title="1">return transactionID, nil</span>
 }
 
 func (t *transferUsecase) GetIncomingMoney(customerId int) ([]model.TransferHistoryIncome, error) <span class="cov8" title="1">{

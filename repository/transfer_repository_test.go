@@ -25,7 +25,7 @@ func TestMakeTransferAccNumbToAccNumb_Success(t *testing.T) {
 	mock.ExpectQuery("^select balance from bankaccounts where account_number = \\$1 for update").WithArgs(senderAccountNumber).WillReturnRows(sqlmock.NewRows([]string{"balance"}).AddRow(20000))
 	mock.ExpectExec("^update bankaccounts set balance = balance - \\$1 where account_number = \\$2").WithArgs(amount, senderAccountNumber).WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectExec("^update bankaccounts set balance = balance \\+ \\$1 where account_number = \\$2").WithArgs(amount, receiverAccountNumber).WillReturnResult(sqlmock.NewResult(1, 1))
-	mock.ExpectExec("^insert into transfer_history \\(transaction_id, sender_account_number, receiver_account_number, amount\\) values \\(\\$1, \\$2, \\$3, \\$4\\)").WithArgs(transactionID, senderAccountNumber, receiverAccountNumber, amount).WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectExec("^insert into transfer_history \\(transfer_id, sender_account_number, receiver_account_number, amount\\) values \\(\\$1, \\$2, \\$3, \\$4\\)").WithArgs(transactionID, senderAccountNumber, receiverAccountNumber, amount).WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectCommit()
 
 	r := &transferRepository{db: db}
@@ -156,7 +156,7 @@ func TestMakeTransferAccNumbToAccNumb_InsertTransferHistoryError(t *testing.T) {
 	mock.ExpectQuery("^select balance from bankaccounts where account_number = \\$1 for update").WithArgs(senderAccountNumber).WillReturnRows(sqlmock.NewRows([]string{"balance"}).AddRow(20000))
 	mock.ExpectExec("^update bankaccounts set balance = balance - \\$1 where account_number = \\$2").WithArgs(amount, senderAccountNumber).WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectExec("^update bankaccounts set balance = balance \\+ \\$1 where account_number = \\$2").WithArgs(amount, receiverAccountNumber).WillReturnResult(sqlmock.NewResult(1, 1))
-	mock.ExpectExec("^insert into transfer_history \\(transaction_id, sender_account_number, receiver_account_number, amount\\) values \\(\\$1, \\$2, \\$3, \\$4\\)").WithArgs(transactionID, senderAccountNumber, receiverAccountNumber, amount).WillReturnError(errors.New("database error")) // simulate a database error
+	mock.ExpectExec("^insert into transfer_history \\(transfer_id, sender_account_number, receiver_account_number, amount\\) values \\(\\$1, \\$2, \\$3, \\$4\\)").WithArgs(transactionID, senderAccountNumber, receiverAccountNumber, amount).WillReturnError(errors.New("database error")) // simulate a database error
 	mock.ExpectRollback()
 
 	r := &transferRepository{db: db}
@@ -198,7 +198,7 @@ func TestGetIncomingMoney_Success(t *testing.T) {
 
 	if len(result) > 0 {
 		assert.Equal(t, 15, result[0].ID)
-		assert.Equal(t, "466d6803-1fb4-4cca-a630-bf1322c36bb0", result[0].TransactionID)
+		assert.Equal(t, "466d6803-1fb4-4cca-a630-bf1322c36bb0", result[0].TransferID)
 		assert.Equal(t, "12481257", result[0].SenderAccountNumber)
 		assert.Equal(t, "12371246", result[0].ReceiverAccountNumber)
 		assert.Equal(t, 10000, result[0].Amount)

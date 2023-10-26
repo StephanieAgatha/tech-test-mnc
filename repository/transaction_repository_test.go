@@ -27,7 +27,7 @@ func TestMakePayment_Success(t *testing.T) {
 	}
 
 	mock.ExpectBegin()
-	mock.ExpectExec("insert into transactions (.+) values (.+)").WithArgs(tx.CustomerID, tx.MerchantID, tx.BankAccountID, tx.Amount).WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectExec("insert into transactions (.+) values (.+)").WithArgs(tx.CustomerID, tx.MerchantID, tx.BankAccountID, tx.Amount, tx.TransactionID).WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectExec("update BankAccounts SET balance = balance - \\$1 where id = \\$2 and customer_id = \\$3").WithArgs(tx.Amount, tx.BankAccountID, tx.CustomerID).WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectExec("update MerchantBalances SET balance = balance \\+ \\$1 where merchant_id = \\$2").WithArgs(tx.Amount, tx.MerchantID).WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectQuery("SELECT name FROM Merchants WHERE id = \\$1").WithArgs(tx.MerchantID).WillReturnRows(sqlmock.NewRows([]string{"name"}).AddRow(tx.MerchantName))
@@ -57,7 +57,7 @@ func TestMakePayment_InsertTransaction_FailureEntryTransaction(t *testing.T) {
 	}
 
 	mock.ExpectBegin()
-	mock.ExpectExec("insert into transactions (.+) values (.+)").WithArgs(tx.CustomerID, tx.MerchantID, tx.BankAccountID, tx.Amount).WillReturnError(fmt.Errorf("insert error")) // simulate an error
+	mock.ExpectExec("insert into transactions (.+) values (.+)").WithArgs(tx.CustomerID, tx.MerchantID, tx.BankAccountID, tx.Amount, tx.TransactionID).WillReturnError(fmt.Errorf("insert error")) // simulate an error
 	mock.ExpectRollback()
 
 	err = r.MakePayment(tx)
@@ -87,7 +87,7 @@ func TestMakePayment_DeductBalanceFailure_DeductBalance(t *testing.T) {
 	}
 
 	mock.ExpectBegin()
-	mock.ExpectExec("insert into transactions (.+) values (.+)").WithArgs(tx.CustomerID, tx.MerchantID, tx.BankAccountID, tx.Amount).WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectExec("insert into transactions (.+) values (.+)").WithArgs(tx.CustomerID, tx.MerchantID, tx.BankAccountID, tx.Amount, tx.TransactionID).WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectExec("update BankAccounts SET balance = balance - \\$1 where id = \\$2 and customer_id = \\$3").WithArgs(tx.Amount, tx.BankAccountID, tx.CustomerID).WillReturnError(fmt.Errorf("deduct error")) // simulate an error
 	mock.ExpectRollback()
 
@@ -117,7 +117,7 @@ func TestMakePayment_AddBalanceFailure(t *testing.T) {
 	}
 
 	mock.ExpectBegin()
-	mock.ExpectExec("insert into transactions (.+) values (.+)").WithArgs(tx.CustomerID, tx.MerchantID, tx.BankAccountID, tx.Amount).WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectExec("insert into transactions (.+) values (.+)").WithArgs(tx.CustomerID, tx.MerchantID, tx.BankAccountID, tx.Amount, tx.TransactionID).WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectExec("update BankAccounts SET balance = balance - \\$1 where id = \\$2 and customer_id = \\$3").WithArgs(tx.Amount, tx.BankAccountID, tx.CustomerID).WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectExec("update MerchantBalances SET balance = balance \\+ \\$1 where merchant_id = \\$2").WithArgs(tx.Amount, tx.MerchantID).WillReturnError(fmt.Errorf("add balance error")) // simulate an error
 	mock.ExpectRollback()
@@ -148,7 +148,7 @@ func TestMakePayment_GetMerchantNameFailure(t *testing.T) {
 	}
 
 	mock.ExpectBegin()
-	mock.ExpectExec("insert into transactions (.+) values (.+)").WithArgs(tx.CustomerID, tx.MerchantID, tx.BankAccountID, tx.Amount).WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectExec("insert into transactions (.+) values (.+)").WithArgs(tx.CustomerID, tx.MerchantID, tx.BankAccountID, tx.Amount, tx.TransactionID).WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectExec("update BankAccounts SET balance = balance - \\$1 where id = \\$2 and customer_id = \\$3").WithArgs(tx.Amount, tx.BankAccountID, tx.CustomerID).WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectExec("update MerchantBalances SET balance = balance \\+ \\$1 where merchant_id = \\$2").WithArgs(tx.Amount, tx.MerchantID).WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectQuery("SELECT name FROM Merchants WHERE id = \\$1").WithArgs(tx.MerchantID).WillReturnError(fmt.Errorf("get merchant name error")) // simulate an error
@@ -180,7 +180,7 @@ func TestMakePayment_CommitFailure(t *testing.T) {
 	}
 
 	mock.ExpectBegin()
-	mock.ExpectExec("insert into transactions (.+) values (.+)").WithArgs(tx.CustomerID, tx.MerchantID, tx.BankAccountID, tx.Amount).WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectExec("insert into transactions (.+) values (.+)").WithArgs(tx.CustomerID, tx.MerchantID, tx.BankAccountID, tx.Amount, tx.TransactionID).WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectExec("update BankAccounts SET balance = balance - \\$1 where id = \\$2 and customer_id = \\$3").WithArgs(tx.Amount, tx.BankAccountID, tx.CustomerID).WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectExec("update MerchantBalances SET balance = balance \\+ \\$1 where merchant_id = \\$2").WithArgs(tx.Amount, tx.MerchantID).WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectQuery("SELECT name FROM Merchants WHERE id = \\$1").WithArgs(tx.MerchantID).WillReturnRows(sqlmock.NewRows([]string{"name"}).AddRow(tx.MerchantName))
@@ -212,13 +212,14 @@ func TestGetCustomerTransactionByID_Success(t *testing.T) {
 		MerchantID:    2,
 		BankAccountID: 3,
 		Amount:        1000,
-		MerchantName:  "Test Merchant",
+		TransactionID: "123123adawd",
 		CreatedAt:     time.Now(),
 		UpdatedAt:     time.Now(),
+		MerchantName:  "Test Merchant",
 	}
 
-	rows := sqlmock.NewRows([]string{"id", "customer_id", "merchant_id", "bank_account_id", "amount", "created_at", "updated_at", "name"}).
-		AddRow(tx.ID, tx.CustomerID, tx.MerchantID, tx.BankAccountID, tx.Amount, tx.CreatedAt, tx.UpdatedAt, tx.MerchantName)
+	rows := sqlmock.NewRows([]string{"id", "customer_id", "merchant_id", "bank_account_id", "amount", "created_at", "updated_at", "transaction_id", "name"}).
+		AddRow(tx.ID, tx.CustomerID, tx.MerchantID, tx.BankAccountID, tx.Amount, tx.CreatedAt, tx.UpdatedAt, tx.TransactionID, tx.MerchantName)
 
 	mock.ExpectQuery(`^SELECT t\.\*, m\.name FROM Transactions t JOIN Merchants m ON t\.merchant_id = m\.id WHERE t\.customer_id = \$1 ORDER BY t\.created_at DESC$`).
 		WithArgs(custID).
@@ -257,7 +258,6 @@ func TestGetCustomerTransactionByID_FailureRowsError(t *testing.T) {
 		UpdatedAt:     time.Now(),
 	}
 
-	// Note that we're only returning 7 columns instead of 8
 	rows := sqlmock.NewRows([]string{"id", "customer_id", "merchant_id", "bank_account_id", "amount", "created_at", "updated_at"}).
 		AddRow(tx.ID, tx.CustomerID, tx.MerchantID, tx.BankAccountID, tx.Amount, tx.CreatedAt, tx.UpdatedAt)
 

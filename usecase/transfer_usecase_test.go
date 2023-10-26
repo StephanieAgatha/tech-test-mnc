@@ -34,9 +34,10 @@ func TestTransferUsecase_MakeTransferAccNumbToAccNumb_Success(t *testing.T) {
 		mockRepo.On("MakeTransferAccNumbToAccNumb", mock.Anything, "senderAccNum", "receiverAccNum", 1000).Return(nil)
 
 		u := NewTransferUsecase(mockRepo)
-		err := u.MakeTransferAccNumbToAccNumb("", "senderAccNum", "receiverAccNum", 1000)
+		transactionID, err := u.MakeTransferAccNumbToAccNumb("senderAccNum", "receiverAccNum", 1000)
 
 		assert.NoError(t, err)
+		assert.NotEmpty(t, transactionID)
 		mockRepo.AssertExpectations(t)
 	})
 }
