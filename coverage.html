@@ -65,11 +65,11 @@
 				
 				<option value="file4">mnc-test/usecase/merchant_usecase.go (70.0%)</option>
 				
-				<option value="file5">mnc-test/usecase/transaction_usecase.go (64.7%)</option>
+				<option value="file5">mnc-test/usecase/transaction_usecase.go (64.3%)</option>
 				
-				<option value="file6">mnc-test/usecase/transfer_usecase.go (65.4%)</option>
+				<option value="file6">mnc-test/usecase/transfer_usecase.go (65.2%)</option>
 				
-				<option value="file7">mnc-test/usecase/user-credentials-usecase.go (52.8%)</option>
+				<option value="file7">mnc-test/usecase/user-credentials-usecase.go (55.3%)</option>
 				
 				</select>
 			</div>
@@ -614,7 +614,6 @@ func NewMerchantUsecase(muc repository.MerchantRepository) MerchantUsecase <span
 
 import (
         "fmt"
-        "go.uber.org/zap"
         "mnc-test/model"
         "mnc-test/repository"
 )
@@ -626,7 +625,6 @@ type TransactionUsecase interface {
 
 type transactionUsecase struct {
         txRepo repository.TransactionRepository
-        logger *zap.Logger
 }
 
 func (t transactionUsecase) MakePayment(tx *model.Transaction) error <span class="cov8" title="1">{
@@ -640,16 +638,6 @@ func (t transactionUsecase) MakePayment(tx *model.Transaction) error <span class
 
         <span class="cov8" title="1">if err := t.txRepo.MakePayment(tx); err != nil </span><span class="cov0" title="0">{
                 return fmt.Errorf(err.Error())
-        }</span>
-
-        //log
-        <span class="cov8" title="1">if t.logger != nil </span><span class="cov0" title="0">{
-                t.logger.Info("A payment has been made",
-                        zap.Int("customerID", tx.CustomerID),
-                        zap.Int("merchantID", tx.MerchantID),
-                        zap.Int("amount", tx.Amount))
-        }</span> else<span class="cov8" title="1"> {
-                fmt.Println("Logger is not initialized")
         }</span>
 
         <span class="cov8" title="1">return nil</span>
@@ -670,10 +658,9 @@ func (t transactionUsecase) GetCustomerTransaction(custID int) ([]model.Transact
         <span class="cov8" title="1">return txs, nil</span>
 }
 
-func NewTransactionUsecase(txrepo repository.TransactionRepository, logger *zap.Logger) TransactionUsecase <span class="cov8" title="1">{
+func NewTransactionUsecase(txrepo repository.TransactionRepository) TransactionUsecase <span class="cov8" title="1">{
         return &amp;transactionUsecase{
                 txRepo: txrepo,
-                logger: logger,
         }
 }</span>
 </pre>
@@ -682,7 +669,6 @@ func NewTransactionUsecase(txrepo repository.TransactionRepository, logger *zap.
 
 import (
         "fmt"
-        "go.uber.org/zap"
         "mnc-test/model"
         "mnc-test/repository"
         "mnc-test/util/helper"
@@ -696,7 +682,6 @@ type TransferUsecase interface {
 
 type transferUsecase struct {
         tfRepo repository.TransferRepository
-        log    *zap.Logger
 }
 
 func (t *transferUsecase) MakeTransferAccNumbToAccNumb(transactionID string, senderAccountNumber string, receiverAccountNumber string, amount int) error <span class="cov8" title="1">{
@@ -716,16 +701,6 @@ func (t *transferUsecase) MakeTransferAccNumbToAccNumb(transactionID string, sen
 
         if err := t.tfRepo.MakeTransferAccNumbToAccNumb(transactionID, senderAccountNumber, receiverAccountNumber, amount); err != nil </span><span class="cov0" title="0">{
                 return fmt.Errorf(err.Error())
-        }</span>
-
-        //log
-        <span class="cov8" title="1">if t.log != nil </span><span class="cov0" title="0">{
-                t.log.Info("Request transfer money has been initiated",
-                        zap.String("senderAcountNumber", senderAccountNumber),
-                        zap.String("receiverAccountNumber", receiverAccountNumber),
-                        zap.Int("amount", amount))
-        }</span> else<span class="cov8" title="1"> {
-                fmt.Println("Logger is not initialized")
         }</span>
 
         <span class="cov8" title="1">return nil</span>
@@ -760,10 +735,9 @@ func (t *transferUsecase) GetOutcomeMoney(customerId int) ([]model.TransferHisto
         <span class="cov8" title="1">return outcomings, nil</span>
 }
 
-func NewTransferUsecase(tfrepo repository.TransferRepository, log *zap.Logger) TransferUsecase <span class="cov8" title="1">{
+func NewTransferUsecase(tfrepo repository.TransferRepository) TransferUsecase <span class="cov8" title="1">{
         return &amp;transferUsecase{
                 tfRepo: tfrepo,
-                log:    log,
         }
 }</span>
 
@@ -801,7 +775,7 @@ func NewTransferUsecase(tfrepo repository.TransferRepository, log *zap.Logger) T
 import (
         "errors"
         "fmt"
-        "go.uber.org/zap"
+        "github.com/redis/go-redis/v9"
         "mnc-test/model"
         "mnc-test/repository"
         "mnc-test/util/helper"
@@ -820,7 +794,7 @@ type userCredentialUsecase struct {
         usercredRepo   repository.UserCredential
         tokenBlacklist map[string]bool
         mu             sync.Mutex // for concurrent map writes
-        log            *zap.Logger
+        redisClient    *redis.Client
 }
 
 func (u *userCredentialUsecase) Register(userCred model.UserCredentials) error <span class="cov8" title="1">{
@@ -867,18 +841,8 @@ func (u *userCredentialUsecase) Register(userCred model.UserCredentials) error <
         }</span>
 
         <span class="cov8" title="1">userCred.Password = hashedPass
-
         if err = u.usercredRepo.Register(userCred); err != nil </span><span class="cov0" title="0">{
                 return err
-        }</span>
-
-        //log goes hereeee
-        <span class="cov8" title="1">if u.log != nil </span><span class="cov0" title="0">{
-                u.log.Info("New Customer Has Been Created",
-                        zap.String("Custormer Name", userCred.Name),
-                        zap.String("Customer Email", userCred.Email))
-        }</span> else<span class="cov8" title="1"> {
-                fmt.Println("Logger is not initialized")
         }</span>
 
         <span class="cov8" title="1">return nil</span>
@@ -904,17 +868,9 @@ func (u *userCredentialUsecase) Login(userCred model.UserCredentials) (string, e
 
         //generate paseto or jwt in here
         <span class="cov0" title="0">symetricKey := os.Getenv("PASETO_SECRET")
-        //jwtsecret := os.Getenv("JWT_SECRET")
         pasetoToken := helper.GeneratePaseto(userCred.Email, symetricKey)
 
-        if u.log != nil </span><span class="cov0" title="0">{
-                u.log.Info("Customer has been logged in",
-                        zap.String("Customer Email", userCred.Email))
-        }</span> else<span class="cov0" title="0"> {
-                fmt.Println("Logger is not initialized")
-        }</span>
-
-        <span class="cov0" title="0">return pasetoToken, nil</span>
+        return pasetoToken, nil</span>
 }
 
 func (u *userCredentialUsecase) FindUserEMail(email string) (userCred model.UserCredentials, err error) <span class="cov8" title="1">{
@@ -933,15 +889,13 @@ func (u *userCredentialUsecase) FindUserEMail(email string) (userCred model.User
 }
 
 func (u *userCredentialUsecase) Logout(userCred model.UserCredentials) error <span class="cov0" title="0">{
-        // Extract the token from the user credentials
-        // This will depend on how you have structured your UserCredentials model
         token := userCred.Token
 
         if token == "" </span><span class="cov0" title="0">{
                 return errors.New("invalid token")
         }</span>
 
-        // Add the token to the blacklist
+        // blacklist them
         <span class="cov0" title="0">u.mu.Lock()
         u.tokenBlacklist[token] = true
         u.mu.Unlock()
@@ -949,12 +903,10 @@ func (u *userCredentialUsecase) Logout(userCred model.UserCredentials) error <sp
         return nil</span>
 }
 
-func NewUserCredentialUsecase(uc repository.UserCredential, log *zap.Logger) UserCredentialUsecase <span class="cov8" title="1">{
+func NewUserCredentialUsecase(usercredRepo repository.UserCredential, redisClient *redis.Client) UserCredentialUsecase <span class="cov8" title="1">{
         return &amp;userCredentialUsecase{
-                usercredRepo:   uc,
-                tokenBlacklist: make(map[string]bool),
-                mu:             sync.Mutex{},
-                log:            log,
+                usercredRepo: usercredRepo,
+                redisClient:  redisClient,
         }
 }</span>
 </pre>
