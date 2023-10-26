@@ -36,7 +36,6 @@ func TestCreateNewMerchant(t *testing.T) {
 }
 
 func TestCreateNewMerchantFailure(t *testing.T) {
-	// Create a new mock database connection
 	db, mock, err := sqlmock.New()
 	require.NoError(t, err)
 
@@ -66,10 +65,8 @@ func TestCreateNewMerchantFailure(t *testing.T) {
 }
 
 func TestFindAllMerchant(t *testing.T) {
-	// Create a new mock database connection
 	db, mock, err := sqlmock.New()
 	require.NoError(t, err)
-
 	defer db.Close()
 
 	// Create a new repo
@@ -97,7 +94,6 @@ func TestFindAllMerchant(t *testing.T) {
 }
 
 func TestFindAllMerchantFailure(t *testing.T) {
-	// Create a new mock database connection
 	db, mock, err := sqlmock.New()
 	require.NoError(t, err)
 	defer db.Close()
@@ -121,7 +117,6 @@ func TestFindAllMerchantFailure(t *testing.T) {
 }
 
 func TestFindAllMerchantScanFailure(t *testing.T) {
-	// Create a new mock database connection
 	db, mock, err := sqlmock.New()
 	require.NoError(t, err)
 	defer db.Close()

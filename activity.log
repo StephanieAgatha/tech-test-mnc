@@ -27,3 +27,4 @@
 {"level":"info","ts":1698292191.39337,"caller":"usecase/transfer_usecase.go:43","msg":"Request transfer money has been initiated","senderAcountNumber":"12481257","receiverAccountNumber":"12371246","amount":10000}
 {"level":"info","ts":1698292359.342233,"caller":"usecase/transfer_usecase.go:43","msg":"Request transfer money has been initiated","senderAcountNumber":"12481257","receiverAccountNumber":"128124756","amount":10000}
 {"level":"info","ts":1698293720.6499395,"caller":"usecase/transfer_usecase.go:44","msg":"Request transfer money has been initiated","senderAcountNumber":"12481257","receiverAccountNumber":"128124756","amount":10000}
+{"level":"info","ts":1698301464.8801463,"caller":"usecase/user-credentials-usecase.go:113","msg":"Customer has been logged in","Customer Email":"awd@gmail.com"}
