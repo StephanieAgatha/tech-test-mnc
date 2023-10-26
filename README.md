@@ -42,7 +42,7 @@ POST   /app/transfer/list/outcome //Showing outcome history
 
 | Description                |
 | :------------------------- |
-| **Required**. Paseto / JWT Token |
+| **Required**. Paseto Token |
 
 #### Activity Logs & HTTP Request Incoming
 Recorded and saved to activity.log & request.log file
