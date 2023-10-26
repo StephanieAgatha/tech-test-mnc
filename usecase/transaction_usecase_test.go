@@ -29,7 +29,7 @@ func TestTransactionUsecase_MakePayment_Success(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		mockRepo.On("MakePayment", mockTransaction).Return(nil)
 
-		u := NewTransactionUsecase(mockRepo, nil)
+		u := NewTransactionUsecase(mockRepo)
 		err := u.MakePayment(mockTransaction)
 
 		assert.NoError(t, err)
@@ -47,7 +47,7 @@ func TestTransactionUsecase_GetCustomerTransaction_Success(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		mockRepo.On("GetCustomerTransactionByID", 1).Return(mockTransactions, nil)
 
-		u := NewTransactionUsecase(mockRepo, nil)
+		u := NewTransactionUsecase(mockRepo)
 		result, err := u.GetCustomerTransaction(1)
 
 		assert.NoError(t, err)

@@ -33,7 +33,7 @@ func TestTransferUsecase_MakeTransferAccNumbToAccNumb_Success(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		mockRepo.On("MakeTransferAccNumbToAccNumb", mock.Anything, "senderAccNum", "receiverAccNum", 1000).Return(nil)
 
-		u := NewTransferUsecase(mockRepo, nil)
+		u := NewTransferUsecase(mockRepo)
 		err := u.MakeTransferAccNumbToAccNumb("", "senderAccNum", "receiverAccNum", 1000)
 
 		assert.NoError(t, err)
@@ -51,7 +51,7 @@ func TestTransferUsecase_GetIncomingMoney_Success(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		mockRepo.On("GetIncomingMoney", 1).Return(mockIncomingMoney, nil)
 
-		u := NewTransferUsecase(mockRepo, nil)
+		u := NewTransferUsecase(mockRepo)
 		result, err := u.GetIncomingMoney(1)
 
 		assert.NoError(t, err)
@@ -70,7 +70,7 @@ func TestTransferUsecase_GetOutcomeMoney_Success(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		mockRepo.On("GetOutcomeMoney", 1).Return(mockOutcomeMoney, nil)
 
-		u := NewTransferUsecase(mockRepo, nil)
+		u := NewTransferUsecase(mockRepo)
 		result, err := u.GetOutcomeMoney(1)
 
 		assert.NoError(t, err)
