@@ -59,7 +59,7 @@ func (t transferRepository) MakeTransferAccNumbToAccNumb(transactionID string, s
 	}
 
 	// Insert the transfer details into the transfer_history table
-	_, err = tx.Exec("insert into transfer_history (transaction_id, sender_account_number, receiver_account_number, amount) values ($1, $2, $3, $4)", transactionID, senderAccountNumber, receiverAccountNumber, amount)
+	_, err = tx.Exec("insert into transfer_history (transfer_id, sender_account_number, receiver_account_number, amount) values ($1, $2, $3, $4)", transactionID, senderAccountNumber, receiverAccountNumber, amount)
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -83,7 +83,7 @@ func (t transferRepository) GetIncomingMoney(customerId int) ([]model.TransferHi
 	}
 
 	rows, err := t.db.Query(`
-	select th.id, th.transaction_id, th.sender_account_number, th.receiver_account_number, th.amount, th.transfer_timestamp, 
+	select th.id, th.transfer_id, th.sender_account_number, th.receiver_account_number, th.amount, th.transfer_timestamp, 
 	b1.name as sender_bank_name, b1.id as sender_bank_id,
 	b2.name as receiver_bank_name, b2.id as receiver_bank_id 
 	from transfer_history th
@@ -102,7 +102,7 @@ func (t transferRepository) GetIncomingMoney(customerId int) ([]model.TransferHi
 
 	for rows.Next() {
 		var transfer model.TransferHistoryIncome
-		err = rows.Scan(&transfer.ID, &transfer.TransactionID, &transfer.SenderAccountNumber, &transfer.ReceiverAccountNumber, &transfer.Amount, &transfer.TransferTimeStamp, &transfer.SenderBankName, &transfer.SenderBankId, &transfer.ReceiverBankName, &transfer.ReceiverBankId)
+		err = rows.Scan(&transfer.ID, &transfer.TransferID, &transfer.SenderAccountNumber, &transfer.ReceiverAccountNumber, &transfer.Amount, &transfer.TransferTimeStamp, &transfer.SenderBankName, &transfer.SenderBankId, &transfer.ReceiverBankName, &transfer.ReceiverBankId)
 		if err != nil {
 			return nil, err
 		}
@@ -126,7 +126,7 @@ func (t transferRepository) GetOutcomeMoney(customerId int) ([]model.TransferHis
 	}
 
 	rows, err := t.db.Query(`
-	select th.id, th.transaction_id, th.sender_account_number, th.receiver_account_number, th.amount, th.transfer_timestamp, 
+	select th.id, th.transfer_id, th.sender_account_number, th.receiver_account_number, th.amount, th.transfer_timestamp, 
 	b1.name as sender_bank_name, b1.id as sender_bank_id,
 	b2.name as receiver_bank_name, b2.id as receiver_bank_id 
 	from transfer_history th

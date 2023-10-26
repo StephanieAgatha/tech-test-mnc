@@ -3,7 +3,7 @@ package model
 import "time"
 
 type TransferRequest struct {
-	TransactionID         string `json:"transaction_id"`
+	TransferID            string `json:"transfer_id"`
 	SenderAccountNumber   string `json:"sender_account_number"`
 	ReceiverAccountNumber string `json:"receiver_account_number"`
 	Amount                int    `json:"amount"`
@@ -11,7 +11,7 @@ type TransferRequest struct {
 
 type TransferHistoryIncome struct {
 	ID                    int       `json:"id"`
-	TransactionID         string    `json:"transaction_id,omitempty"`
+	TransferID            string    `json:"transfer_id,omitempty"`
 	SenderAccountNumber   string    `json:"sender_account_number"`
 	ReceiverAccountNumber string    `json:"receiver_account_number"`
 	CustomerID            int       `json:"customer_id"`
@@ -25,7 +25,7 @@ type TransferHistoryIncome struct {
 
 type TransferHistoryIncomeResponse struct {
 	ID                    int    `json:"id"`
-	TransactionID         string `json:"transaction_id,omitempty"`
+	TransferID            string `json:"transfer_id,omitempty"`
 	SenderAccountNumber   string `json:"sender_account_number"`
 	ReceiverAccountNumber string `json:"receiver_account_number"`
 	Amount                int    `json:"amount"`

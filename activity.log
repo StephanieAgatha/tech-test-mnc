@@ -2,3 +2,16 @@
 {"level":"info","ts":1698318820.718331,"caller":"controller/user-credential-controller.go:36","msg":"New Customer Has Been Created","Custormer Name":"palll13","Customer Email":"pall12@gmail.com"}
 {"level":"info","ts":1698318833.313814,"caller":"controller/user-credential-controller.go:77","msg":"Customer has been logged in","Customer Email":"pall12@gmail.com"}
 {"level":"info","ts":1698319011.2144413,"caller":"controller/merchant-controller.go:35","msg":"New merchant has been created","Merchant Name":"haji barokah"}
+{"level":"info","ts":1698331908.0875618,"caller":"controller/user-credential-controller.go:77","msg":"Customer has been logged in","Customer Email":"pall12@gmail.com"}
+{"level":"info","ts":1698332267.2394564,"caller":"controller/transaction_controller.go:43","msg":"A payment has been made","customerID":3,"merchantID":1,"bankAccountID":1,"amount":5000}
+{"level":"info","ts":1698332934.0784972,"caller":"controller/transaction_controller.go:44","msg":"A payment has been made","TransactionID":"357237d7-933f-4f20-898f-e79c17fd463e","customerID":3,"merchantID":1,"bankAccountID":1,"amount":5000}
+{"level":"info","ts":1698333140.9916706,"caller":"controller/transaction_controller.go:90","msg":"Requested Get Transactions","customerID":3}
+{"level":"info","ts":1698333193.2113008,"caller":"controller/transaction_controller.go:90","msg":"Requested Get Transactions","customerID":3}
+{"level":"info","ts":1698333309.441283,"caller":"controller/transaction_controller.go:91","msg":"Requested Get Transactions","customerID":3}
+{"level":"info","ts":1698333355.3454762,"caller":"controller/transaction_controller.go:91","msg":"Requested Get Transactions","customerID":3}
+{"level":"info","ts":1698333614.1180406,"caller":"controller/transaction_controller.go:44","msg":"A payment has been made","TransactionID":"d1985d9c-b006-4b38-93bf-4596c7eb9d0c","customerID":3,"merchantID":1,"merchantName":"toko bapak","bankAccountID":1,"amount":5000}
+{"level":"info","ts":1698333689.3027883,"caller":"controller/transfer-controller.go:35","msg":"Request transfer money has been initiated","senderAcountNumber":"12481257","receiverAccountNumber":"128124756","amount":10000}
+{"level":"info","ts":1698333985.6958113,"caller":"controller/transfer-controller.go:35","msg":"Request transfer money has been initiated","senderAcountNumber":"12481257","receiverAccountNumber":"128124756","amount":10000}
+{"level":"info","ts":1698334264.6785982,"caller":"controller/transfer-controller.go:37","msg":"Request transfer money has been initiated","senderAcountNumber":"12481257","receiverAccountNumber":"128124756","amount":10000}
+{"level":"info","ts":1698334358.1162949,"caller":"controller/transfer-controller.go:37","msg":"Request transfer money has been initiated","transferID":"f29943e7-cf35-4517-bfa7-8288e9b5314d","senderAcountNumber":"12481257","receiverAccountNumber":"128124756","amount":10000}
+{"level":"info","ts":1698334549.1456852,"caller":"controller/transfer-controller.go:37","msg":"Request transfer money has been initiated","transferID":"9d393793-d00e-44cc-ab83-8e4d68325f92","senderAcountNumber":"12481257","receiverAccountNumber":"128124756","amount":10000}

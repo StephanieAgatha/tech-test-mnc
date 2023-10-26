@@ -33,16 +33,20 @@ func (t TransactionController) MakePaymentController(c *gin.Context) {
 
 	//custom response disini
 	response := model.TransactionResponse{
-		MerchantName: tx.MerchantName,
-		Amount:       tx.Amount,
-		CreatedAt:    time.Now().Format("2006-01-02 15:04:05"),
+		TransactionID: tx.TransactionID,
+		Amount:        tx.Amount,
+		CreatedAt:     time.Now().Format("2006-01-02 15:04:05"),
+		MerchantName:  tx.MerchantName,
 	}
 
 	//log
 	if t.logger != nil {
 		t.logger.Info("A payment has been made",
+			zap.String("TransactionID", tx.TransactionID),
 			zap.Int("customerID", tx.CustomerID),
 			zap.Int("merchantID", tx.MerchantID),
+			zap.String("merchantName", tx.MerchantName),
+			zap.Int("bankAccountID", tx.BankAccountID),
 			zap.Int("amount", tx.Amount))
 	} else {
 		fmt.Println("Logger is not initialized")
@@ -76,9 +80,10 @@ func (t TransactionController) GetCustTransactionByIDHandler(c *gin.Context) {
 	var txResponses []model.TransactionResponse
 	for _, tx := range txs {
 		txResponses = append(txResponses, model.TransactionResponse{
-			MerchantName: tx.MerchantName,
-			Amount:       tx.Amount,
-			CreatedAt:    tx.CreatedAt.Format(time.RFC3339),
+			TransactionID: tx.TransactionID,
+			Amount:        tx.Amount,
+			CreatedAt:     tx.CreatedAt.Format(time.RFC3339),
+			MerchantName:  tx.MerchantName,
 		})
 	}
 

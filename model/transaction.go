@@ -8,6 +8,7 @@ type Transaction struct {
 	MerchantID    int       `json:"merchant_id"`
 	BankAccountID int       `json:"bank_account_id"`
 	Amount        int       `json:"amount"`
+	TransactionID string    `json:"transaction_id"`
 	CreatedAt     time.Time `json:"created_at"`
 	UpdatedAt     time.Time `json:"updated_at"`
 	CustomerEmail string    `json:"customer_email,omitempty"`
@@ -15,8 +16,9 @@ type Transaction struct {
 }
 
 type TransactionResponse struct {
-	CustomerID   int    `json:"customer_id,omitempty"`
-	Amount       int    `json:"amount"`
-	CreatedAt    string `json:"created_at"`
-	MerchantName string `json:"merchant_name"`
+	CustomerID    int    `json:"customer_id,omitempty"`
+	TransactionID string `json:"transaction_id"`
+	Amount        int    `json:"amount"`
+	CreatedAt     string `json:"created_at"`
+	MerchantName  string `json:"merchant_name"`
 }

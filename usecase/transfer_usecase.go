@@ -8,7 +8,7 @@ import (
 )
 
 type TransferUsecase interface {
-	MakeTransferAccNumbToAccNumb(transactionID string, senderAccountNumber string, receiverAccountNumber string, amount int) error
+	MakeTransferAccNumbToAccNumb(senderAccountNumber string, receiverAccountNumber string, amount int) (string, error)
 	GetIncomingMoney(customerId int) ([]model.TransferHistoryIncome, error)
 	GetOutcomeMoney(customerId int) ([]model.TransferHistoryOutcome, error)
 }
@@ -17,26 +17,26 @@ type transferUsecase struct {
 	tfRepo repository.TransferRepository
 }
 
-func (t *transferUsecase) MakeTransferAccNumbToAccNumb(transactionID string, senderAccountNumber string, receiverAccountNumber string, amount int) error {
+func (t *transferUsecase) MakeTransferAccNumbToAccNumb(senderAccountNumber string, receiverAccountNumber string, amount int) (string, error) {
 	//TODO implement me
 
 	//validasi dsini
 	if senderAccountNumber == "" {
-		return fmt.Errorf("account number cannot be empty")
+		return "", fmt.Errorf("account number cannot be empty")
 	} else if receiverAccountNumber == "" {
-		return fmt.Errorf("account number cannot be empty")
+		return "", fmt.Errorf("account number cannot be empty")
 	} else if amount <= 0 {
-		return fmt.Errorf("amount must greater than zero")
+		return "", fmt.Errorf("amount must greater than zero")
 	}
 
 	//generate uuid in here
-	transactionID = helper.GenerateUUID()
+	transactionID := helper.GenerateUUID()
 
 	if err := t.tfRepo.MakeTransferAccNumbToAccNumb(transactionID, senderAccountNumber, receiverAccountNumber, amount); err != nil {
-		return fmt.Errorf(err.Error())
+		return "", fmt.Errorf(err.Error())
 	}
 
-	return nil
+	return transactionID, nil
 }
 
 func (t *transferUsecase) GetIncomingMoney(customerId int) ([]model.TransferHistoryIncome, error) {

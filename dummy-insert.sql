@@ -41,25 +41,25 @@ INSERT INTO merchants (id, name)
 VALUES (2, 'haji barokah');
 
 --table transactions
-INSERT INTO transactions (id, customer_id, merchant_id, bank_account_id, amount, created_at, updated_at)
-VALUES (2, 3, 1, 1, 15000, '2023-10-25 16:55:31.751896', '2023-10-25 16:55:31.751896');
+INSERT INTO transactions (id, customer_id, merchant_id, bank_account_id, amount, created_at, updated_at, transaction_id)
+VALUES (2, 3, 1, 1, 15000, '2023-10-25 16:55:31.751896', '2023-10-25 16:55:31.751896', '15258234d7123-18247f-4f20-14212-e79c17fd463e' );
 
-INSERT INTO transactions (id, customer_id, merchant_id, bank_account_id, amount, created_at, updated_at)
-VALUES (3, 3, 1, 1, 1000, '2023-10-26 00:11:11.062746', '2023-10-26 00:11:11.062746');
+INSERT INTO transactions (id, customer_id, merchant_id, bank_account_id, amount, created_at, updated_at, transaction_id)
+VALUES (3, 3, 1, 1, 1000, '2023-10-26 00:11:11.062746', '2023-10-26 00:11:11.062746'), '31258234d7123-18247f-4f20-14212-e79c17fd463e';
 
-INSERT INTO transactions (id, customer_id, merchant_id, bank_account_id, amount, created_at, updated_at)
-VALUES (4, 3, 1, 1, 5000, '2023-10-26 00:13:49.048078', '2023-10-26 00:13:49.048078');
+INSERT INTO transactions (id, customer_id, merchant_id, bank_account_id, amount, created_at, updated_at, transaction_id)
+VALUES (4, 3, 1, 1, 5000, '2023-10-26 00:13:49.048078', '2023-10-26 00:13:49.048078', '35721234d7-18247f-4f20-14212-e79c17fd463e');
 
-INSERT INTO transactions (id, customer_id, merchant_id, bank_account_id, amount, created_at, updated_at)
-VALUES (9, 3, 1, 1, 5000, '2023-10-26 01:33:29.228417', '2023-10-26 01:33:29.228417');
+INSERT INTO transactions (id, customer_id, merchant_id, bank_account_id, amount, created_at, updated_at, transaction_id)
+VALUES (9, 3, 1, 1, 5000, '2023-10-26 01:33:29.228417', '2023-10-26 01:33:29.228417', '35721234d7-18247f-4f20-1124-e79c17fd463e');
 
 
 --table transactions history
-INSERT INTO transfer_history (id, sender_account_number, receiver_account_number, amount, transfer_timestamp, transaction_id)
+INSERT INTO transfer_history (id, sender_account_number, receiver_account_number, amount, transfer_timestamp, transfer_id)
 VALUES (15, '12481257', '12371246', 10000, '2023-10-26 10:49:51.391191', '466d6803-1fb4-4cca-a630-bf1322c36bb0');
 
-INSERT INTO transfer_history (id, sender_account_number, receiver_account_number, amount, transfer_timestamp, transaction_id)
+INSERT INTO transfer_history (id, sender_account_number, receiver_account_number, amount, transfer_timestamp, transfer_id)
 VALUES (16, '12481257', '128124756', 10000, '2023-10-26 10:52:39.333791', 'e3abcc75-4fb2-4172-b4ae-5a8423fdc477');
 
-INSERT INTO transfer_history (id, sender_account_number, receiver_account_number, amount, transfer_timestamp, transaction_id)
+INSERT INTO transfer_history (id, sender_account_number, receiver_account_number, amount, transfer_timestamp, transfer_id)
 VALUES (17, '12481257', '128124756', 10000, '2023-10-26 11:15:20.636468', 'e4250937-912e-4f51-ac50-363e790c02fd');

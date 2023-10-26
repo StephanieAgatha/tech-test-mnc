@@ -25,14 +25,17 @@ func (t TransferController) TransferAccNumbToAccNumb(c *gin.Context) {
 		return
 	}
 
-	if err := t.tfUsecase.MakeTransferAccNumbToAccNumb(tf.TransactionID, tf.SenderAccountNumber, tf.ReceiverAccountNumber, tf.Amount); err != nil {
+	transactionID, err := t.tfUsecase.MakeTransferAccNumbToAccNumb(tf.SenderAccountNumber, tf.ReceiverAccountNumber, tf.Amount)
+	if err != nil {
 		c.AbortWithStatusJSON(500, gin.H{"Error": err.Error()})
 		return
 	}
+	tf.TransferID = transactionID
 
 	//log
 	if t.log != nil {
 		t.log.Info("Request transfer money has been initiated",
+			zap.String("transferID", tf.TransferID),
 			zap.String("senderAcountNumber", tf.SenderAccountNumber),
 			zap.String("receiverAccountNumber", tf.ReceiverAccountNumber),
 			zap.Int("amount", tf.Amount))
@@ -64,7 +67,7 @@ func (t TransferController) GetIncomingMoneyHandler(c *gin.Context) {
 	for i, transfer := range tfHistoryIncome {
 		responseData[i] = model.TransferHistoryIncomeResponse{
 			ID:                    transfer.ID,
-			TransactionID:         transfer.TransactionID,
+			TransferID:            transfer.TransferID,
 			SenderAccountNumber:   transfer.SenderAccountNumber,
 			ReceiverAccountNumber: transfer.ReceiverAccountNumber,
 			Amount:                transfer.Amount,
@@ -100,7 +103,7 @@ func (t TransferController) GetOutcomeMoneyHandler(c *gin.Context) {
 	for i, transfer := range tfHistoryIncome {
 		responseData[i] = model.TransferHistoryIncomeResponse{
 			ID:                    transfer.ID,
-			TransactionID:         transfer.TransactionID,
+			TransferID:            transfer.TransactionID,
 			SenderAccountNumber:   transfer.SenderAccountNumber,
 			ReceiverAccountNumber: transfer.ReceiverAccountNumber,
 			Amount:                transfer.Amount,

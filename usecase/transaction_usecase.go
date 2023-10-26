@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"mnc-test/model"
 	"mnc-test/repository"
+	"mnc-test/util/helper"
 )
 
 type TransactionUsecase interface {
@@ -23,6 +24,9 @@ func (t transactionUsecase) MakePayment(tx *model.Transaction) error {
 	} else if tx.Amount == 0 {
 		return fmt.Errorf("amount cannot be zero")
 	}
+
+	//generate uuid for transaction id
+	tx.TransactionID = helper.GenerateUUID()
 
 	if err := t.txRepo.MakePayment(tx); err != nil {
 		return fmt.Errorf(err.Error())

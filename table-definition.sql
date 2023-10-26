@@ -71,7 +71,9 @@ create table transactions
         references bankaccounts,
     amount          integer not null,
     created_at      timestamp default CURRENT_TIMESTAMP,
-    updated_at      timestamp default CURRENT_TIMESTAMP
+    updated_at      timestamp default CURRENT_TIMESTAMP,
+    transaction_id  varchar(255)
+        unique
 );
 
 --table transfer history
@@ -85,5 +87,5 @@ create table transfer_history
         references bankaccounts (account_number),
     amount                  integer,
     transfer_timestamp      timestamp default CURRENT_TIMESTAMP,
-    transaction_id          varchar(255)
+    transfer_id             varchar(255)
 );

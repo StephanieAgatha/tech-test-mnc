@@ -49,15 +49,19 @@ Recorded and saved to activity.log & request.log file
 #### example :
 Customer has been logged in :
 ```
-{"level":"info","ts":1698301464.8801463,"caller":"usecase/user-credentials-usecase.go:113","msg":"Customer has been logged in","Customer Email":"awd@gmail.com"}
+{"level":"info","ts":1698318833.313814,"caller":"controller/user-credential-controller.go:77","msg":"Customer has been logged in","Customer Email":"pall12@gmail.com"}
+```
+Customer has been logged out :
+```
+{"level":"info","ts":1698318779.6292548,"caller":"controller/user-credential-controller.go:107","msg":"Customer has been logged out","Customer Email":"pall12@gmail.com"}
 ```
 Customer has made a new payment :
 ```
-{"level":"info","ts":1698258809.2386837,"caller":"usecase/transaction_usecase.go:35","msg":"A payment has been made","customerID":3,"merchantID":1,"amount":5000}
+{"level":"info","ts":1698333614.1180406,"caller":"controller/transaction_controller.go:44","msg":"A payment has been made","TransactionID":"d1985d9c-b006-4b38-93bf-4596c7eb9d0c","customerID":3,"merchantID":1,"merchantName":"toko bapak","bankAccountID":1,"amount":5000}
 ```
 Customer has successfully transferred money: :
 ```
-{"level":"info","ts":1698291841.860478,"caller":"usecase/transfer_usecase.go:43","msg":"Request transfer money has been initiated","senderAcountNumber":"12481257","receiverAccountNumber":"12371246","amount":10000}
+{"level":"info","ts":1698334549.1456852,"caller":"controller/transfer-controller.go:37","msg":"Request transfer money has been initiated","transferID":"9d393793-d00e-44cc-ab83-8e4d68325f92","senderAcountNumber":"12481257","receiverAccountNumber":"128124756","amount":10000}
 ```
 Requested to create a new merchant :
 ```
