@@ -10,6 +10,8 @@
 
 #### Copy whole .env.example and create a new .env
 
+#### Before running this app, make sure you have already installed Redis and connected to it first
+
 #### Paseto expire token (Hour Format) ex :
 ```go
 jsonToken := paseto.JSONToken{
