@@ -1,0 +1,724 @@
+{
+  "info": {
+    "_postman_id": "aed2b8b7-fb73-42b9-be9e-9457d38871ba",
+    "name": "MNC Test",
+    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+    "_exporter_id": "29723627",
+    "_collection_link": "https://www.postman.com/crimson-crater-616314/workspace/mnc-test/collection/29723627-aed2b8b7-fb73-42b9-be9e-9457d38871ba?action=share&source=collection_link&creator=29723627"
+  },
+  "item": [
+    {
+      "name": "User Area",
+      "item": [
+        {
+          "name": "User Register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"awd\",\r\n    \"email\": \"awd@gmail.com\",\r\n    \"phone_number\": \"085156810932\",\r\n    \"password\": \"N@wad@@@123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{base_url}}/auth/register"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"cyaa\",\r\n    \"email\": \"cyaa@gmail.com\",\r\n    \"phone_number\": \"085156810932\",\r\n    \"password\": \"N@wad@@@123\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": "http://localhost:3000/auth/register"
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 25 Oct 2023 10:56:23 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "35"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"Message\": \"Successfully Register\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "User Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n   \"email\": \"awd@gmail.com\",\r\n    \"password\": \"N@wad@@@123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{base_url}}/auth/login"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n   \"email\": \"awd@gmail.com\",\r\n    \"password\": \"N@wad@@@123\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": "{{base_url}}/auth/login"
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 26 Oct 2023 06:24:24 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "270"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"Data\": \"v2.local.hG8BfP8YxFxKi_VYlH40GZhEQhDABRP0lkV5qAg5Kxfvl27gT2bXUiiupsnVAhvDdvZNk7XtTB6HVUjAUCWj4yAslRIQm5odPTxj9yJBMcw9ihxOm8AAWMdg9BPwwrgHIxR8E1ITkCgR3TR-GdLPoSPU993xER0YXd3jdUdl_AkCcRdr9KiONmtw-Fe0JwMXvj2KGS-VyWX2DStcer6RbEjwZxAgN1HdMpw.Zm9vdGVyIGdvZXMgaGVyZQ\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "User Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"customer_email\": \"pall12@gmail.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{base_url}}/auth/logout"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"customer_email\": \"pall12@gmail.com\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": "{{base_url}}/auth/logout"
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 26 Oct 2023 10:44:26 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "31"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"Message\": \"Logout successful\"\n}"
+            }
+          ]
+        }
+      ],
+      "description": "Login request will return paseto token"
+    },
+    {
+      "name": "Merchant Area",
+      "item": [
+        {
+          "name": "Create New Merchant",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"toko bapak\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{base_url}}/app/merchants/create"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"toko bapak\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": "{{base_url}}/app/merchants/create"
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 25 Oct 2023 11:34:55 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "46"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"Message\": \"Successfully create new merchant\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "List All Merchant",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/app/merchants/list"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}/app/merchants/list"
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 25 Oct 2023 13:33:43 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "125"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"Data\": [\n        {\n            \"id\": 1,\n            \"name\": \"toko bapak\",\n            \"created_at\": \"2023-10-25T18:34:55.531485Z\",\n            \"updated_at\": \"2023-10-25T18:34:55.531485Z\"\n        }\n    ]\n}"
+            }
+          ]
+        }
+      ],
+      "description": "Before you make a new request,you should go to log in first and grab paseto key. (middleware protected :))) )",
+      "auth": {
+        "type": "bearer",
+        "bearer": {
+          "token": "v2.local.uF6yEuzK1BraFojjVmN1tJsWjEBKhcZq2vm5PHylqM7RyUyF0jU5vCDu_tC3gaiRgPdrm3pzxjlOCN31InrlkN9hYvLL2Yawbif-GTTqzgyBW8Ok0ydHQd_6lm5kqGLKjSy8ERdMXft8bwPkJjH6n4IA2yC2u0RGhwpKMXhIO23aWMq2FB83SDgZNMSs76FHrAL-fENw7bBlJX0ijGo6WqesTEEG27zEX-l-8a0.Zm9vdGVyIGdvZXMgaGVyZQ"
+        }
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payment Area",
+      "item": [
+        {
+          "name": "Make Payment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"customer_id\": 3,\r\n    \"merchant_id\": 1,\r\n    \"amount\": 5000\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{base_url}}/app/transaction/create"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"customer_id\": 3,\r\n    \"merchant_id\": 1,\r\n    \"bank_account_id\": 1,\r\n    \"amount\": 5000\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": "{{base_url}}/app/transaction/create"
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 25 Oct 2023 18:33:29 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "113"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"Data\": {\n        \"amount\": 5000,\n        \"created_at\": \"2023-10-26 01:33:29\",\n        \"merchant_name\": \"toko bapak\"\n    },\n    \"Message\": \"Successfully\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Catch payment by ID",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"customer_id\": 3\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{base_url}}/app/transaction/list"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"customer_id\": 3\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": "{{base_url}}/app/transaction/list"
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 25 Oct 2023 18:34:41 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "335"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"Data\": [\n        {\n            \"amount\": 5000,\n            \"created_at\": \"2023-10-26T01:33:29Z\",\n            \"merchant_name\": \"toko bapak\"\n        },\n        {\n            \"amount\": 5000,\n            \"created_at\": \"2023-10-26T00:13:49Z\",\n            \"merchant_name\": \"toko bapak\"\n        },\n        {\n            \"amount\": 1000,\n            \"created_at\": \"2023-10-26T00:11:11Z\",\n            \"merchant_name\": \"toko bapak\"\n        },\n        {\n            \"amount\": 15000,\n            \"created_at\": \"2023-10-25T16:55:31Z\",\n            \"merchant_name\": \"toko bapak\"\n        }\n    ]\n}"
+            },
+            {
+              "name": "Logged out Test",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"customer_id\": 3\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": "{{base_url}}/app/transaction/list"
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 26 Oct 2023 10:44:37 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "44"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"Error\": \"Token expired or user logged out\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Catch payment by email",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"customer_email\": \"ellizavad@gmail.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{base_url}}/app/transaction/list/email"
+          },
+          "response": []
+        }
+      ],
+      "auth": {
+        "type": "bearer",
+        "bearer": {
+          "token": "v2.local.DC5fpz29adQgFIkQRM-x1MI7CE44z3CsOQdYOHbVaIMq7hklP9ITrJKL-ev36HCWaTo7d_SnlNqNE5UV6LUenb5ylQDBsWk28luNh5BGSNPvobw6DDLOqnVvVVinwBsw-KOQzWqSa0eWN5cR0LZKA_EAiiji210xyRV28iGfltM81clujB7_wP_51J_Z-xixJO1ZRfcHXyPaHn6cnwGzQUGxQUw67-Pr1ltOJP4.Zm9vdGVyIGdvZXMgaGVyZQ"
+        }
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Transfer Area",
+      "item": [
+        {
+          "name": "Transfer from accnumber to accnumber",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"sender_account_number\" : \"12481257\",\r\n    \"receiver_account_number\": \"128124756\",\r\n    \"amount\": 10000\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{base_url}}/app/transfer/create/account"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"sender_account_number\" : \"12371246\",\r\n    \"receiver_account_number\": \"12481257\",\r\n    \"amount\": 1000\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": "{{base_url}}/app/transfer/create"
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 25 Oct 2023 19:02:24 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "121"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"Data\": {\n        \"sender_account_number\": \"12371246\",\n        \"receiver_account_number\": \"12481257\",\n        \"amount\": 1000\n    },\n    \"Message\": \"Successfully\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Income Money History",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"customer_id\": 5\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{base_url}}/app/transfer/list/income"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"customer_id\": 5\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": "{{base_url}}/app/transfer/list/income"
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 26 Oct 2023 03:58:51 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "577"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"Data\": [\n        {\n            \"id\": 15,\n            \"transaction_id\": \"466d6803-1fb4-4cca-a630-bf1322c36bb0\",\n            \"sender_account_number\": \"12481257\",\n            \"receiver_account_number\": \"12371246\",\n            \"amount\": 10000,\n            \"transfer_time\": \"2023-10-26 10:49:51\",\n            \"sender_bank_name\": \"BCA\",\n            \"sender_bank_id\": 1,\n            \"receiver_bank_name\": \"BCA\",\n            \"receiver_bank_id\": 1\n        },\n        {\n            \"id\": 16,\n            \"transaction_id\": \"e3abcc75-4fb2-4172-b4ae-5a8423fdc477\",\n            \"sender_account_number\": \"12481257\",\n            \"receiver_account_number\": \"128124756\",\n            \"amount\": 10000,\n            \"transfer_time\": \"2023-10-26 10:52:39\",\n            \"sender_bank_name\": \"BCA\",\n            \"sender_bank_id\": 1,\n            \"receiver_bank_name\": \"BRI\",\n            \"receiver_bank_id\": 2\n        }\n    ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Outcome Money History",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"customer_id\": 3\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{base_url}}/app/transfer/list/outcome"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"customer_id\": 3\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": "{{base_url}}/app/transfer/list/outcome"
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 26 Oct 2023 04:11:07 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "577"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"Data\": [\n        {\n            \"id\": 15,\n            \"transaction_id\": \"466d6803-1fb4-4cca-a630-bf1322c36bb0\",\n            \"sender_account_number\": \"12481257\",\n            \"receiver_account_number\": \"12371246\",\n            \"amount\": 10000,\n            \"transfer_time\": \"2023-10-26 10:49:51\",\n            \"sender_bank_name\": \"BCA\",\n            \"sender_bank_id\": 1,\n            \"receiver_bank_name\": \"BCA\",\n            \"receiver_bank_id\": 1\n        },\n        {\n            \"id\": 16,\n            \"transaction_id\": \"e3abcc75-4fb2-4172-b4ae-5a8423fdc477\",\n            \"sender_account_number\": \"12481257\",\n            \"receiver_account_number\": \"128124756\",\n            \"amount\": 10000,\n            \"transfer_time\": \"2023-10-26 10:52:39\",\n            \"sender_bank_name\": \"BCA\",\n            \"sender_bank_id\": 1,\n            \"receiver_bank_name\": \"BRI\",\n            \"receiver_bank_id\": 2\n        }\n    ]\n}"
+            }
+          ]
+        }
+      ],
+      "auth": {
+        "type": "bearer",
+        "bearer": {
+          "token": "v2.local.uF6yEuzK1BraFojjVmN1tJsWjEBKhcZq2vm5PHylqM7RyUyF0jU5vCDu_tC3gaiRgPdrm3pzxjlOCN31InrlkN9hYvLL2Yawbif-GTTqzgyBW8Ok0ydHQd_6lm5kqGLKjSy8ERdMXft8bwPkJjH6n4IA2yC2u0RGhwpKMXhIO23aWMq2FB83SDgZNMSs76FHrAL-fENw7bBlJX0ijGo6WqesTEEG27zEX-l-8a0.Zm9vdGVyIGdvZXMgaGVyZQ"
+        }
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ]
+}
