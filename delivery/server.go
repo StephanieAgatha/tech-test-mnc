@@ -53,8 +53,8 @@ func NewServer() (*Server, error) {
 		},
 		Encoding:         "json",
 		EncoderConfig:    zap.NewProductionEncoderConfig(),
-		OutputPaths:      []string{"activity.log"}, //activity from merchants,customer,etc goes here. we don't want to mix the log output to log.log
-		ErrorOutputPaths: []string{"activity.log"}, //sameeee
+		OutputPaths:      []string{"activity.json"}, //activity from merchants,customer,etc goes here. we don't want to mix the log output to log.log
+		ErrorOutputPaths: []string{"errorLog.json"}, //sameeee
 	}
 	logger, err := zapconf.Build()
 	if err != nil {

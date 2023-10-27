@@ -5,7 +5,7 @@
 #### Example Usage
 
 ```go
-	go run cmd/main.go
+	go run main.go
 ```
 
 #### Copy whole .env.example and create a new .env
@@ -40,7 +40,7 @@ POST   /app/transfer/list/outcome //Showing outcome history
 | **Required**. Paseto Token |
 
 #### Activity Logs & HTTP Request Incoming
-Recorded and saved to activity.log & request.log file
+Recorded and saved to activity.json & request.json file
 #### example :
 Customer has been logged in :
 ```

@@ -10,7 +10,7 @@ import (
 
 func ZapLogger(logger *zap.Logger) gin.HandlerFunc {
 	// Configure log file path
-	logFile := "request.log"
+	logFile := "request.json"
 
 	// open file
 	file, err := os.OpenFile(logFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)

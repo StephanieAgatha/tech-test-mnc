@@ -1,0 +1,4 @@
+{"level":"info","ts":1698407807.124905,"caller":"controller/user-credential-controller.go:77","msg":"Customer has been logged in","Customer Email":"pall12@gmail.com"}
+{"level":"info","ts":1698407900.7166882,"caller":"controller/merchant-controller.go:35","msg":"New merchant has been created","Merchant Name":"toko ibu"}
+{"level":"info","ts":1698407951.9794939,"caller":"controller/transaction_controller.go:44","msg":"A payment has been made","TransactionID":"513b0369-0bff-4538-bc82-b7b7acd7a5e6","customerID":3,"merchantID":1,"merchantName":"toko bapak","bankAccountID":1,"amount":5000}
+{"level":"info","ts":1698407977.4175355,"caller":"controller/transfer-controller.go:37","msg":"Request transfer money has been initiated","transferID":"7359f0ef-38e2-423b-b38f-067ad815fdee","senderAcountNumber":"12481257","receiverAccountNumber":"128124756","amount":10000}
